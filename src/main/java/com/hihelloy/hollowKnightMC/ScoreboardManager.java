@@ -26,8 +26,8 @@ public class ScoreboardManager {
     public void createScoreboard(Player player) {
         if (!configManager.getConfig().getBoolean("Plugin.ShowScoreboard", true)) return;
         
-        ScoreboardManager manager = Bukkit.getScoreboardManager();
-        Scoreboard scoreboard = manager.getNewScoreboard();
+        ScoreboardManager manager = HollowKnightMC.plugin.getScoreboardManager();
+        Scoreboard scoreboard = HollowKnightMC.plugin.getScoreboard();
         
         String title = ChatColor.translateAlternateColorCodes('&', 
             configManager.getConfig().getString("Plugin.ScoreboardTitle", "§6§lHollow Knight Stats"));

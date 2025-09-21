@@ -1,6 +1,10 @@
 package com.hihelloy.hollowKnightMC;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.*;
+
+import java.util.Set;
 
 public final class HollowKnightMC extends JavaPlugin {
     public static HollowKnightMC plugin;
@@ -8,6 +12,7 @@ public final class HollowKnightMC extends JavaPlugin {
     private KnightManager knightManager;
     private BossManager bossManager;
     private ScoreboardManager scoreboardManager;
+    private Scoreboard scoreboard;
 
     @Override
     public void onEnable() {
@@ -24,7 +29,7 @@ public final class HollowKnightMC extends JavaPlugin {
         
         // Initialize Knight manager
         knightManager = new KnightManager(this, configManager);
-        
+
         // Register commands
         getCommand("nosk").setExecutor(new NoskCommand(configManager));
         getCommand("knight").setExecutor(new KnightCommand(knightManager));
@@ -77,4 +82,6 @@ public final class HollowKnightMC extends JavaPlugin {
     public KnightManager getKnightManager() {
         return knightManager;
     }
+
+    public Scoreboard getScoreboard() { return scoreboard; }
 }

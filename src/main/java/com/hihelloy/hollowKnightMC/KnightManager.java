@@ -139,4 +139,12 @@ public class KnightManager {
             }
         }
     }
+
+    public static KnightManager getKnightManager() {
+        return HollowKnightMC.plugin.getKnightManager();
+    }
+
+    public static ConfigManager getConfigManager() {
+        return HollowKnightMC.plugin.getConfigManager();
+    }
 }
