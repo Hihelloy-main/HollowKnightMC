@@ -2,6 +2,7 @@ package com.hihelloy.hollowKnightMC;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.*;
@@ -25,19 +26,21 @@ public class ScoreboardManager {
 
     public void createScoreboard(Player player) {
         if (!configManager.getConfig().getBoolean("Plugin.ShowScoreboard", true)) return;
-        
-        ScoreboardManager manager = HollowKnightMC.plugin.getScoreboardManager();
-        Scoreboard scoreboard = HollowKnightMC.plugin.getScoreboard();
-        
-        String title = ChatColor.translateAlternateColorCodes('&', 
-            configManager.getConfig().getString("Plugin.ScoreboardTitle", "§6§lHollow Knight Stats"));
-        
-        Objective objective = scoreboard.registerNewObjective("hkstats", "dummy", title);
+
+        Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+
+        String title = ChatColor.translateAlternateColorCodes('&',
+                configManager.getConfig().getString("Plugin.ScoreboardTitle", "§6§lHollow Knight Stats"));
+
+        Objective objective = scoreboard.getObjective("hkstats");
+        if (objective == null) {
+            objective = scoreboard.registerNewObjective("hkstats", Criteria.DUMMY, title);
+        }
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        
+
         playerScoreboards.put(player.getUniqueId(), scoreboard);
         player.setScoreboard(scoreboard);
-        
+
         updatePlayerScoreboard(player);
     }
 
@@ -49,33 +52,44 @@ public class ScoreboardManager {
     private void updatePlayerScoreboard(Player player) {
         Scoreboard scoreboard = playerScoreboards.get(player.getUniqueId());
         if (scoreboard == null) return;
-        
+
         KnightPlayer knightPlayer = plugin.getKnightManager().getKnightPlayer(player);
         if (knightPlayer == null) return;
-        
+
         Objective objective = scoreboard.getObjective("hkstats");
         if (objective == null) return;
-        
-        // Clear existing scores
+
+        // Clear old scores
         for (String entry : scoreboard.getEntries()) {
             scoreboard.resetScores(entry);
         }
-        
-        // Add current stats
+
         int line = 10;
-        
-        objective.getScore(ChatColor.BLUE + "Soul: " + knightPlayer.getCurrentSoul() + "/" + knightPlayer.getMaxSoul()).setScore(line--);
-        objective.getScore(ChatColor.RED + "Health: " + Math.round(player.getHealth()) + "/" + Math.round(player.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH).getValue())).setScore(line--);
-        objective.getScore("").setScore(line--);
-        
-        // Add ability status
-        objective.getScore(ChatColor.GREEN + "Abilities:").setScore(line--);
-        objective.getScore(knightPlayer.isDashing() ? ChatColor.YELLOW + "⚡ Dashing" : ChatColor.GRAY + "⚡ Dash Ready").setScore(line--);
-        objective.getScore(knightPlayer.isFocusing() ? ChatColor.LIGHT_PURPLE + "✦ Focusing" : ChatColor.GRAY + "✦ Focus Ready").setScore(line--);
-        
+
+        // Stats
+        objective.getScore(ChatColor.BLUE + "Soul: " +
+                knightPlayer.getCurrentSoul() + "/" + knightPlayer.getMaxSoul()).setScore(line--);
+
+        double health = Math.round(player.getHealth());
+        double maxHealth = Math.round(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+        objective.getScore(ChatColor.RED + "Health: " + health + "/" + maxHealth).setScore(line--);
+
         objective.getScore(" ").setScore(line--);
+
+        // Abilities
+        objective.getScore(ChatColor.GREEN + "Abilities:").setScore(line--);
+        objective.getScore(knightPlayer.isDashing()
+                ? ChatColor.YELLOW + "⚡ Dashing"
+                : ChatColor.GRAY + "⚡ Dash Ready").setScore(line--);
+        objective.getScore(knightPlayer.isFocusing()
+                ? ChatColor.LIGHT_PURPLE + "✦ Focusing"
+                : ChatColor.GRAY + "✦ Focus Ready").setScore(line--);
+
+        objective.getScore("  ").setScore(line--);
+
+        // Controls
         objective.getScore(ChatColor.GOLD + "Controls:").setScore(line--);
-        objective.getScore(ChatColor.WHITE + "Shift+Shift: Dash").setScore(line--);
+        objective.getScore(ChatColor.WHITE + "Shift: Dash").setScore(line--);
         objective.getScore(ChatColor.WHITE + "Left Click: Spirit").setScore(line--);
         objective.getScore(ChatColor.WHITE + "Shift+Right: Focus").setScore(line--);
     }
@@ -88,15 +102,14 @@ public class ScoreboardManager {
                     updatePlayerScoreboard(player);
                 }
             }
-        }, 0L, 20L); // Update every second
+        }, 0L, 20L); // every 1 second
     }
 
     public void shutdown() {
         if (updateTask != null && !updateTask.isCancelled()) {
             updateTask.cancel();
         }
-        
-        // Remove all scoreboards
+
         for (UUID uuid : playerScoreboards.keySet()) {
             Player player = Bukkit.getPlayer(uuid);
             if (player != null && player.isOnline()) {

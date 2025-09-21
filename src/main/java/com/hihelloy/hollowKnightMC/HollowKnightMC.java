@@ -32,9 +32,11 @@ public final class HollowKnightMC extends JavaPlugin {
 
         // Register commands
         getCommand("nosk").setExecutor(new NoskCommand(configManager));
+        getCommand("nosk").setTabCompleter(new NoskCommand(configManager));
         getCommand("knight").setExecutor(new KnightCommand(knightManager));
+        getCommand("knight").setTabCompleter(new KnightCommand(knightManager));
         getCommand("hkmc").setExecutor(new MainCommand(this, configManager, bossManager));
-        getCommand("knight").setExecutor(new KnightCommand(knightManager));
+        getCommand("hkmc").setTabCompleter(new MainCommand(this, configManager, bossManager));
         
         // Register listeners
         getServer().getPluginManager().registerEvents(new NoskEventListener(), this);

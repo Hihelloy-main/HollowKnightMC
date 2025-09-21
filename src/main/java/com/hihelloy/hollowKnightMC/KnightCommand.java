@@ -4,10 +4,17 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-public class KnightCommand implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class KnightCommand implements CommandExecutor, TabCompleter {
+
     private final KnightManager knightManager;
+    private final List<String> subCommands = Arrays.asList("toggle", "soul");
 
     public KnightCommand(KnightManager knightManager) {
         this.knightManager = knightManager;
@@ -55,24 +62,31 @@ public class KnightCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.BLUE + "Soul: " + knightPlayer.getCurrentSoul() + "/" + knightPlayer.getMaxSoul());
                 break;
 
-            case "reload":
-                if (!player.hasPermission("hollowknightmc.knight.admin")) {
-                    player.sendMessage(ChatColor.RED + "You don't have permission to reload the config!");
-                    return true;
-                }
-                knightManager.reloadConfig();
-                player.sendMessage(ChatColor.GREEN + "Knight configuration reloaded!");
-                break;
-
             case "toggle":
                 // Same as no args
                 return onCommand(sender, command, label, new String[0]);
 
             default:
-                player.sendMessage(ChatColor.RED + "Usage: /knight [toggle|soul|reload]");
+                player.sendMessage(ChatColor.RED + "Usage: /knight [toggle|soul]");
                 break;
         }
 
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        List<String> completions = new ArrayList<>();
+
+        if (args.length == 1) {
+            String current = args[0].toLowerCase();
+            for (String sub : subCommands) {
+                if (sub.startsWith(current)) {
+                    completions.add(sub);
+                }
+            }
+        }
+
+        return completions;
     }
 }

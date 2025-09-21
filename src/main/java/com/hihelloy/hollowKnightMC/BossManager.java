@@ -1,9 +1,7 @@
 package com.hihelloy.hollowKnightMC;
 
 import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Zombie;
+import org.bukkit.entity.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,16 +20,16 @@ public class BossManager {
 
     private void initializeBossTypes() {
         // Map boss names to entity types (using existing Minecraft entities as base)
-        bossTypes.put("hornet", Zombie.class);
-        bossTypes.put("shadowknight", Zombie.class);
-        bossTypes.put("mantislord", Zombie.class);
-        bossTypes.put("soulmaster", Zombie.class);
-        bossTypes.put("dungdefender", Zombie.class);
-        bossTypes.put("brokenvessel", Zombie.class);
-        bossTypes.put("crystalguardian", Zombie.class);
-        bossTypes.put("watcherknight", Zombie.class);
-        bossTypes.put("traitorlord", Zombie.class);
-        bossTypes.put("grimm", Zombie.class);
+        bossTypes.put("hornet", Bee.class);
+        bossTypes.put("shadowknight", Enderman.class);
+        bossTypes.put("mantislord", Wither.class);
+        bossTypes.put("soulmaster", Ocelot.class);
+        bossTypes.put("dungdefender", Bee.class);
+        bossTypes.put("brokenvessel", Flying.class);
+        bossTypes.put("crystalguardian", Endermite.class);
+        bossTypes.put("watcherknight", org.bukkit.entity.Allay.class);
+        bossTypes.put("traitorlord", Silverfish.class);
+        bossTypes.put("grimm", CaveSpider.class);
     }
 
     public boolean spawnBoss(String bossName, Location location) {
