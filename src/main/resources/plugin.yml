@@ -1,33 +1,57 @@
-name: HollowKnightMC
-version: '${project.version}'
-main: com.hihelloy.hollowKnightMC.HollowKnightMC
-api-version: '1.20'
-prefix: HollowKnightMC
-authors: [ Hihelloy ]
-description: A Minecraft plugin that adds Hollow Knight inspired mobs
-website: https://github.com/hihelloy/HollowKnightMC
+package com.hihelloy.hollowKnightMC;
 
-commands:
-  nosk:
-    description: Spawns a Nosk entity
-    usage: /<command>
-    permission: hollowknightmc.nosk
-    permission-message: You don't have permission to use this command.
-  knight:
-    description: Toggle Knight abilities or check soul
-    usage: /<command> [toggle|soul|reload]
-    permission: hollowknightmc.knight
-    permission-message: You don't have permission to use this command.
+import org.bukkit.plugin.java.JavaPlugin;
 
-permissions:
-  hollowknightmc.nosk:
-    description: Allows spawning Nosk entities
-    default: op
-  hollowknightmc.knight:
-    description: Allows using Knight abilities
-    default: true
-  hollowknightmc.knight.admin:
-    description: Allows admin commands for Knight abilities
-    default: op
+public final class HollowKnightMC extends JavaPlugin {
+    public static HollowKnightMC plugin;
+    private ConfigManager configManager;
+    private KnightManager knightManager;
+    private BossManager bossManager;
 
-depend: [LibsDisguises]
+    @Override
+    public void onEnable() {
+        plugin = this;
+        
+        // Initialize configuration
+        saveDefaultConfig();
+        configManager = new ConfigManager(this);
+        
+        // Initialize Knight manager
+        knightManager = new KnightManager(this, configManager);
+        
+        // Initialize Boss manager
+        bossManager = new BossManager(this, configManager);
+        
+        // Register commands
+        getCommand("nosk").setExecutor(new NoskCommand(configManager));
+        getCommand("knight").setExecutor(new KnightCommand(knightManager));
+        getCommand("hkmc").setExecutor(new HollowKnightCommand(this, configManager, bossManager));
+        
+        // Register listeners
+        getServer().getPluginManager().registerEvents(new NoskEventListener(), this);
+        getServer().getPluginManager().registerEvents(new KnightEventListener(knightManager), this);
+        getServer().getPluginManager().registerEvents(new BossEventListener(bossManager), this);
+        
+        getLogger().info("HollowKnightMC has been enabled!");
+        getLogger().info("Nosk entities can now be spawned with /nosk command");
+        getLogger().info("Knight abilities are now available for players!");
+        getLogger().info("Hollow Knight bosses are now available! Use /hkmc list to see all bosses.");
+    }
+
+    @Override
+    public void onDisable() {
+        if (knightManager != null) {
+            knightManager.shutdown();
+        }
+        if (bossManager != null) {
+        getLogger().info("HollowKnightMC has been disabled!");
+    }
+
+    public ConfigManager getConfigManager() {
+        return configManager;
+    }
+    
+    public KnightManager getKnightManager() {
+        return knightManager;
+    }
+}

@@ -1,26 +1,10 @@
 # Configuration for HollowKnightMC Plugin
 
-Nosk:
-  # Health of the Nosk entity
-  Health: 52.0
-  
-  # Movement speed of the Nosk entity
-  Speed: 0.3
-  
-  # How often Nosk shapeshifts (in ticks, 20 ticks = 1 second)
-  ShapeShiftCooldown: 200
-  
-  # Dash ability settings
-  DashCooldown: 60
-  DashSpeed: 1.5
-  DashHeight: 0.2
-  
-  # Blob spit ability settings
-  BlobSpitCooldown: 40
-  BlobSpeed: 1.2
-  
-  # Detection range for targeting players
-  TargetRange: 16.0
+# Global plugin settings
+Plugin:
+  AutoEnableKnight: true
+  ShowScoreboard: true
+  ScoreboardTitle: "§6§lHollow Knight Stats"
 
 Knight:
   # Player abilities configuration
@@ -53,6 +37,35 @@ Knight:
     Height: 1.2
     HorizontalBoost: 0.8
     
+  # Double jump ability
+  DoubleJump:
+    Enabled: true
+    Cooldown: 10
+    Height: 1.0
+    
+  # Super dash ability
+  SuperDash:
+    Enabled: true
+    Cooldown: 100
+    Distance: 15.0
+    Duration: 40
+    Speed: 2.0
+    
+  # Crystal dash ability
+  CrystalDash:
+    Enabled: true
+    Cooldown: 80
+    ChargeTime: 40
+    Speed: 1.8
+    Distance: 12.0
+    
+  # Shade cloak ability
+  ShadeCloak:
+    Enabled: true
+    Cooldown: 120
+    Duration: 60
+    DashDistance: 10.0
+    
   # Soul abilities
   Soul:
     Enabled: true
@@ -68,13 +81,36 @@ Knight:
       HealAmount: 2.0
       CastTime: 60
       
-    # Vengeful Spirit (projectile) ability
+    # Vengeful Spirit (projectile) ability - LEFT CLICK
     VengefulSpirit:
       Enabled: true
       SoulCost: 11
       Damage: 4.0
       Speed: 2.0
       Range: 20.0
+      
+    # Shade Soul (upgraded projectile)
+    ShadeSoul:
+      Enabled: true
+      SoulCost: 22
+      Damage: 8.0
+      Speed: 2.5
+      Range: 25.0
+      Piercing: true
+      
+    # Howling Wraiths (area attack)
+    HowlingWraiths:
+      Enabled: true
+      SoulCost: 33
+      Damage: 6.0
+      Radius: 5.0
+      
+    # Abyss Shriek (upgraded area attack)
+    AbyssShriek:
+      Enabled: true
+      SoulCost: 44
+      Damage: 12.0
+      Radius: 7.0
       
   # Combat settings
   Combat:
@@ -88,3 +124,247 @@ Knight:
     SoulParticles: true
     HealingParticles: true
     AttackParticles: true
+
+# Boss configurations
+Bosses:
+  # 1. Hornet
+  Hornet:
+    Enabled: true
+    Health: 80.0
+    Speed: 0.4
+    Damage: 6.0
+    SpawnChance: 0.1
+    Abilities:
+      Dash:
+        Enabled: true
+        Cooldown: 60
+        Speed: 2.0
+      NeedleThrow:
+        Enabled: true
+        Cooldown: 40
+        Speed: 1.8
+        Damage: 4.0
+      SilkTrap:
+        Enabled: true
+        Cooldown: 100
+        Duration: 60
+    
+  # 2. The Knight (Shadow)
+  ShadowKnight:
+    Enabled: true
+    Health: 60.0
+    Speed: 0.35
+    Damage: 5.0
+    SpawnChance: 0.08
+    Abilities:
+      VoidSlash:
+        Enabled: true
+        Cooldown: 50
+        Damage: 7.0
+        Range: 4.0
+      ShadowDash:
+        Enabled: true
+        Cooldown: 80
+        Speed: 1.8
+    
+  # 3. Mantis Lords
+  MantisLord:
+    Enabled: true
+    Health: 100.0
+    Speed: 0.45
+    Damage: 8.0
+    SpawnChance: 0.05
+    Abilities:
+      BoomerangClaw:
+        Enabled: true
+        Cooldown: 60
+        Speed: 2.0
+        Damage: 6.0
+      WallCling:
+        Enabled: true
+        Duration: 40
+      Lunge:
+        Enabled: true
+        Cooldown: 40
+        Speed: 2.5
+    
+  # 4. Soul Master
+  SoulMaster:
+    Enabled: true
+    Health: 120.0
+    Speed: 0.3
+    Damage: 7.0
+    SpawnChance: 0.04
+    Abilities:
+      SoulOrb:
+        Enabled: true
+        Cooldown: 30
+        Speed: 1.5
+        Damage: 5.0
+      Teleport:
+        Enabled: true
+        Cooldown: 80
+        Range: 10.0
+      SoulSlam:
+        Enabled: true
+        Cooldown: 100
+        Damage: 10.0
+        Radius: 4.0
+    
+  # 5. Dung Defender
+  DungDefender:
+    Enabled: true
+    Health: 140.0
+    Speed: 0.25
+    Damage: 6.0
+    SpawnChance: 0.03
+    Abilities:
+      DungBall:
+        Enabled: true
+        Cooldown: 40
+        Speed: 1.2
+        Damage: 4.0
+      Burrow:
+        Enabled: true
+        Cooldown: 100
+        Duration: 60
+      Bounce:
+        Enabled: true
+        Cooldown: 60
+        Height: 2.0
+    
+  # 6. Broken Vessel
+  BrokenVessel:
+    Enabled: true
+    Health: 90.0
+    Speed: 0.3
+    Damage: 7.0
+    SpawnChance: 0.06
+    Abilities:
+      InfectedBlob:
+        Enabled: true
+        Cooldown: 50
+        Speed: 1.0
+        Damage: 5.0
+      Leap:
+        Enabled: true
+        Cooldown: 70
+        Height: 1.5
+        Damage: 8.0
+      SummonBalloons:
+        Enabled: true
+        Cooldown: 120
+        Count: 3
+    
+  # 7. Crystal Guardian
+  CrystalGuardian:
+    Enabled: true
+    Health: 110.0
+    Speed: 0.2
+    Damage: 8.0
+    SpawnChance: 0.04
+    Abilities:
+      CrystalBeam:
+        Enabled: true
+        Cooldown: 60
+        Range: 15.0
+        Damage: 9.0
+      CrystalSpikes:
+        Enabled: true
+        Cooldown: 80
+        Count: 5
+        Damage: 6.0
+      Stomp:
+        Enabled: true
+        Cooldown: 100
+        Radius: 3.0
+        Damage: 10.0
+    
+  # 8. Watcher Knights
+  WatcherKnight:
+    Enabled: true
+    Health: 130.0
+    Speed: 0.35
+    Damage: 9.0
+    SpawnChance: 0.03
+    Abilities:
+      Roll:
+        Enabled: true
+        Cooldown: 50
+        Speed: 1.8
+        Damage: 7.0
+      Bounce:
+        Enabled: true
+        Cooldown: 70
+        Height: 2.5
+        Damage: 8.0
+      Slam:
+        Enabled: true
+        Cooldown: 90
+        Damage: 12.0
+        Radius: 4.0
+    
+  # 9. Traitor Lord
+  TraitorLord:
+    Enabled: true
+    Health: 160.0
+    Speed: 0.4
+    Damage: 10.0
+    SpawnChance: 0.02
+    Abilities:
+      ShockwaveSlash:
+        Enabled: true
+        Cooldown: 80
+        Range: 8.0
+        Damage: 12.0
+      Dash:
+        Enabled: true
+        Cooldown: 60
+        Speed: 2.2
+        Damage: 8.0
+      Summon:
+        Enabled: true
+        Cooldown: 150
+        Count: 2
+    
+  # 10. Grimm
+  Grimm:
+    Enabled: true
+    Health: 200.0
+    Speed: 0.5
+    Damage: 12.0
+    SpawnChance: 0.01
+    Abilities:
+      FireBat:
+        Enabled: true
+        Cooldown: 40
+        Speed: 2.0
+        Damage: 8.0
+        Count: 3
+      Teleport:
+        Enabled: true
+        Cooldown: 60
+        Range: 12.0
+      GroundFire:
+        Enabled: true
+        Cooldown: 100
+        Duration: 80
+        Damage: 6.0
+      UppercutFlame:
+        Enabled: true
+        Cooldown: 80
+        Damage: 15.0
+        Height: 3.0
+
+# Original Nosk configuration (kept for compatibility)
+Nosk:
+  Enabled: true
+  Health: 52.0
+  Speed: 0.3
+  ShapeShiftCooldown: 200
+  DashCooldown: 60
+  DashSpeed: 1.5
+  DashHeight: 0.2
+  BlobSpitCooldown: 40
+  BlobSpeed: 1.2
+  TargetRange: 16.0

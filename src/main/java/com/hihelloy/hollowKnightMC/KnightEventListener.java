@@ -22,7 +22,8 @@ public class KnightEventListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        if (player.hasPermission("hollowknightmc.knight")) {
+        if (player.hasPermission("hollowknightmc.knight") && 
+            knightManager.getKnightManager().getConfigManager().getConfig().getBoolean("Plugin.AutoEnableKnight", true)) {
             // Auto-enable knight abilities for players with permission
             knightManager.enableKnightAbilities(player);
         }
@@ -54,15 +55,15 @@ public class KnightEventListener implements Listener {
         
         if (knightPlayer == null) return;
         
-        if (event.getAction().name().contains("RIGHT_CLICK")) {
+        if (event.getAction().name().contains("LEFT_CLICK")) {
+            // Cast vengeful spirit on left click
+            if (knightPlayer.castVengefulSpirit()) {
+                event.setCancelled(true);
+            }
+        } else if (event.getAction().name().contains("RIGHT_CLICK")) {
             if (player.isSneaking()) {
                 // Start focus healing
                 if (knightPlayer.startFocus()) {
-                    event.setCancelled(true);
-                }
-            } else {
-                // Cast vengeful spirit
-                if (knightPlayer.castVengefulSpirit()) {
                     event.setCancelled(true);
                 }
             }
@@ -118,14 +119,14 @@ public class KnightEventListener implements Listener {
             
             if (knightPlayer != null && event.getEntity() instanceof LivingEntity) {
                 // Add soul on hit
-                int soulPerHit = HollowKnightMC.plugin.getConfigManager()
+                int soulPerHit = knightManager.getKnightManager().getConfigManager()
                     .getConfig().getInt("Knight.Soul.SoulPerHit", 3);
                 knightPlayer.addSoul(soulPerHit);
                 
                 // Check if target dies to give kill soul
                 LivingEntity target = (LivingEntity) event.getEntity();
                 if (target.getHealth() - event.getFinalDamage() <= 0) {
-                    int soulPerKill = HollowKnightMC.plugin.getConfigManager()
+                    int soulPerKill = knightManager.getKnightManager().getConfigManager()
                         .getConfig().getInt("Knight.Soul.SoulPerKill", 11);
                     knightPlayer.addSoul(soulPerKill);
                 }
@@ -152,13 +153,13 @@ public class KnightEventListener implements Listener {
                         Player shooter = (Player) projectile.getShooter();
                         KnightPlayer knightPlayer = knightManager.getKnightPlayer(shooter);
                         if (knightPlayer != null) {
-                            int soulPerHit = HollowKnightMC.plugin.getConfigManager()
+                            int soulPerHit = knightManager.getKnightManager().getConfigManager()
                                 .getConfig().getInt("Knight.Soul.SoulPerHit", 3);
                             knightPlayer.addSoul(soulPerHit);
                             
                             // Check for kill
                             if (target.getHealth() - damage <= 0) {
-                                int soulPerKill = HollowKnightMC.plugin.getConfigManager()
+                                int soulPerKill = knightManager.getKnightManager().getConfigManager()
                                     .getConfig().getInt("Knight.Soul.SoulPerKill", 11);
                                 knightPlayer.addSoul(soulPerKill);
                             }

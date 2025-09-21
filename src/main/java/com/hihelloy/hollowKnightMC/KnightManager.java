@@ -35,12 +35,18 @@ public class KnightManager {
         
         applyKnightAttributes(player);
         knightPlayer.initializeSoul();
+        
+        // Create scoreboard
+        plugin.getScoreboardManager().createScoreboard(player);
     }
 
     public void disableKnightAbilities(Player player) {
         UUID uuid = player.getUniqueId();
         knightPlayers.remove(uuid);
         resetPlayerAttributes(player);
+        
+        // Remove scoreboard
+        plugin.getScoreboardManager().removeScoreboard(player);
     }
 
     public KnightPlayer getKnightPlayer(Player player) {
