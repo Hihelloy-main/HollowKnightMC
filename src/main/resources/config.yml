@@ -1,0 +1,90 @@
+# Configuration for HollowKnightMC Plugin
+
+Nosk:
+  # Health of the Nosk entity
+  Health: 52.0
+  
+  # Movement speed of the Nosk entity
+  Speed: 0.3
+  
+  # How often Nosk shapeshifts (in ticks, 20 ticks = 1 second)
+  ShapeShiftCooldown: 200
+  
+  # Dash ability settings
+  DashCooldown: 60
+  DashSpeed: 1.5
+  DashHeight: 0.2
+  
+  # Blob spit ability settings
+  BlobSpitCooldown: 40
+  BlobSpeed: 1.2
+  
+  # Detection range for targeting players
+  TargetRange: 16.0
+
+Knight:
+  # Player abilities configuration
+  Enabled: true
+  
+  # Health settings (in half-hearts, 20 = 10 hearts)
+  MaxHealth: 18.0
+  StartingHealth: 10.0
+  
+  # Movement settings
+  WalkSpeed: 0.25
+  FlySpeed: 0.1
+  JumpBoost: 2
+  
+  # Player size scaling (1.0 = normal size)
+  PlayerScale: 0.8
+  
+  # Dash ability
+  Dash:
+    Enabled: true
+    Cooldown: 40
+    Distance: 8.0
+    Height: 0.3
+    InvulnerabilityTicks: 10
+    
+  # Wall jump ability
+  WallJump:
+    Enabled: true
+    Cooldown: 20
+    Height: 1.2
+    HorizontalBoost: 0.8
+    
+  # Soul abilities
+  Soul:
+    Enabled: true
+    MaxSoul: 99
+    StartingSoul: 33
+    SoulPerKill: 11
+    SoulPerHit: 3
+    
+    # Focus (healing) ability
+    Focus:
+      Enabled: true
+      SoulCost: 33
+      HealAmount: 2.0
+      CastTime: 60
+      
+    # Vengeful Spirit (projectile) ability
+    VengefulSpirit:
+      Enabled: true
+      SoulCost: 11
+      Damage: 4.0
+      Speed: 2.0
+      Range: 20.0
+      
+  # Combat settings
+  Combat:
+    MeleeDamage: 3.0
+    AttackSpeed: 1.5
+    KnockbackResistance: 0.2
+    
+  # Visual effects
+  Effects:
+    DashParticles: true
+    SoulParticles: true
+    HealingParticles: true
+    AttackParticles: true

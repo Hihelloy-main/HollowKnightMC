@@ -1,0 +1,49 @@
+package com.hihelloy.hollowKnightMC;
+
+import org.bukkit.plugin.java.JavaPlugin;
+
+public final class HollowKnightMC extends JavaPlugin {
+    public static HollowKnightMC plugin;
+    private ConfigManager configManager;
+    private KnightManager knightManager;
+
+    @Override
+    public void onEnable() {
+        plugin = this;
+        
+        // Initialize configuration
+        saveDefaultConfig();
+        configManager = new ConfigManager(this);
+        
+        // Initialize Knight manager
+        knightManager = new KnightManager(this, configManager);
+        
+        // Register commands
+        getCommand("nosk").setExecutor(new NoskCommand(configManager));
+        getCommand("knight").setExecutor(new KnightCommand(knightManager));
+        
+        // Register listeners
+        getServer().getPluginManager().registerEvents(new NoskEventListener(), this);
+        getServer().getPluginManager().registerEvents(new KnightEventListener(knightManager), this);
+        
+        getLogger().info("HollowKnightMC has been enabled!");
+        getLogger().info("Nosk entities can now be spawned with /nosk command");
+        getLogger().info("Knight abilities are now available for players!");
+    }
+
+    @Override
+    public void onDisable() {
+        if (knightManager != null) {
+            knightManager.shutdown();
+        }
+        getLogger().info("HollowKnightMC has been disabled!");
+    }
+
+    public ConfigManager getConfigManager() {
+        return configManager;
+    }
+    
+    public KnightManager getKnightManager() {
+        return knightManager;
+    }
+}
