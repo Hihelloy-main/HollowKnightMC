@@ -8,7 +8,6 @@ public final class HollowKnightMC extends JavaPlugin {
     private KnightManager knightManager;
     private BossManager bossManager;
     private ScoreboardManager scoreboardManager;
-    private KnightManager knightManager;
 
     @Override
     public void onEnable() {
@@ -65,10 +64,7 @@ public final class HollowKnightMC extends JavaPlugin {
     public ConfigManager getConfigManager() {
         return configManager;
     }
-    
-    public KnightManager getKnightManager() {
-        return knightManager;
-    }
+
     
     public BossManager getBossManager() {
         return bossManager;
