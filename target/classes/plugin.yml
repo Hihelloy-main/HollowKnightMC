@@ -1,0 +1,33 @@
+name: HollowKnightMC
+version: '1.0.0'
+main: com.hihelloy.hollowKnightMC.HollowKnightMC
+api-version: '1.20'
+prefix: HollowKnightMC
+authors: [ Hihelloy ]
+description: A Minecraft plugin that adds Hollow Knight inspired mobs
+website: https://github.com/hihelloy/HollowKnightMC
+
+commands:
+  nosk:
+    description: Spawns a Nosk entity
+    usage: /<command>
+    permission: hollowknightmc.nosk
+    permission-message: You don't have permission to use this command.
+  knight:
+    description: Toggle Knight abilities or check soul
+    usage: /<command> [toggle|soul|reload]
+    permission: hollowknightmc.knight
+    permission-message: You don't have permission to use this command.
+
+permissions:
+  hollowknightmc.nosk:
+    description: Allows spawning Nosk entities
+    default: op
+  hollowknightmc.knight:
+    description: Allows using Knight abilities
+    default: true
+  hollowknightmc.knight.admin:
+    description: Allows admin commands for Knight abilities
+    default: op
+
+depend: [LibsDisguises]
