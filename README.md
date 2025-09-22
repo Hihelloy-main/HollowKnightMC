@@ -1,3 +1,6 @@
+[![GitHub release](https://img.shields.io/github/v/release/Hihelloy-main/HollowKnightMC?style=flat-square)](https://github.com/Hihelloy-main/HollowKnightMC/releases)
+[![Github Downloads](https://img.shields.io/github/downloads/Hihelloy-main/HollowKnightMC/total.svg)](https://github.com/Hihelloy-main/HollowKnightMC/releases)
+
 # HollowKnightMC Plugin
 
 A comprehensive Minecraft Bukkit/Spigot plugin that adds complete Hollow Knight and Silksong content to your server.
