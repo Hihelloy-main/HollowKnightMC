@@ -1,7 +1,9 @@
-package com.hihelloy.hollowKnightMC;
+package com.hihelloy.hollowKnightMC.managers;
 
+import com.hihelloy.hollowKnightMC.HollowKnightMC;
 import org.bukkit.Location;
-import org.bukkit.entity.*;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +11,7 @@ import java.util.Map;
 public class BossManager {
     private final HollowKnightMC plugin;
     private ConfigManager configManager;
-    private final Map<String, Class<? extends LivingEntity>> bossTypes;
+    private final Map<String, EntityType> bossTypes;
 
     public BossManager(HollowKnightMC plugin, ConfigManager configManager) {
         this.plugin = plugin;
@@ -19,17 +21,34 @@ public class BossManager {
     }
 
     private void initializeBossTypes() {
-        // Map boss names to entity types (using existing Minecraft entities as base)
-        bossTypes.put("hornet", Bee.class);
-        bossTypes.put("shadowknight", Enderman.class);
-        bossTypes.put("mantislord", Wither.class);
-        bossTypes.put("soulmaster", Ocelot.class);
-        bossTypes.put("dungdefender", Bee.class);
-        bossTypes.put("brokenvessel", Flying.class);
-        bossTypes.put("crystalguardian", Endermite.class);
-        bossTypes.put("watcherknight", org.bukkit.entity.Allay.class);
-        bossTypes.put("traitorlord", Silverfish.class);
-        bossTypes.put("grimm", CaveSpider.class);
+        // Hollow Knight bosses
+        bossTypes.put("hornet", EntityType.ZOMBIE);
+        bossTypes.put("shadowknight", EntityType.WITHER_SKELETON);
+        bossTypes.put("mantislord", EntityType.ZOMBIE);
+        bossTypes.put("soulmaster", EntityType.PHANTOM);
+        bossTypes.put("dungdefender", EntityType.ZOMBIE);
+        bossTypes.put("brokenvessel", EntityType.ZOMBIE);
+        bossTypes.put("crystalguardian", EntityType.IRON_GOLEM);
+        bossTypes.put("watcherknight", EntityType.IRON_GOLEM);
+        bossTypes.put("traitorlord", EntityType.ZOMBIE);
+        bossTypes.put("grimm", EntityType.BLAZE);
+        bossTypes.put("radiance", EntityType.PHANTOM);
+        bossTypes.put("nightmarekingrimm", EntityType.BLAZE);
+        bossTypes.put("absoluteradiance", EntityType.PHANTOM);
+        bossTypes.put("purevessel", EntityType.WITHER_SKELETON);
+        bossTypes.put("sistesofbattle", EntityType.ZOMBIE);
+        
+        // Silksong bosses
+        bossTypes.put("lace", EntityType.ZOMBIE);
+        bossTypes.put("moss", EntityType.ZOMBIE);
+        bossTypes.put("sharpe", EntityType.SKELETON);
+        bossTypes.put("gannet", EntityType.PHANTOM);
+        bossTypes.put("carmelita", EntityType.SPIDER);
+        bossTypes.put("macabre", EntityType.WITHER_SKELETON);
+        bossTypes.put("krow", EntityType.PHANTOM);
+        bossTypes.put("bonebottom", EntityType.SKELETON);
+        bossTypes.put("seth", EntityType.BLAZE);
+        bossTypes.put("coral", EntityType.GUARDIAN);
     }
 
     public boolean spawnBoss(String bossName, Location location) {
@@ -39,9 +58,14 @@ public class BossManager {
             return false;
         }
 
+        EntityType entityType = bossTypes.get(bossName.toLowerCase());
+        if (entityType == null) {
+            return false;
+        }
+
         try {
             // Spawn the base entity
-            LivingEntity entity = (LivingEntity) location.getWorld().spawnEntity(location, EntityType.ZOMBIE);
+            LivingEntity entity = (LivingEntity) location.getWorld().spawnEntity(location, entityType);
             
             // Configure the boss
             configureBoss(entity, bossName, configKey);
@@ -71,6 +95,10 @@ public class BossManager {
         
         // Add boss metadata for event handling
         entity.setMetadata("hollow_knight_boss", new org.bukkit.metadata.FixedMetadataValue(plugin, bossName));
+    }
+
+    public String[] getAllBossNames() {
+        return bossTypes.keySet().toArray(new String[0]);
     }
 
     public void reloadConfig() {

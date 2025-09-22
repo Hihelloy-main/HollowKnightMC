@@ -1,5 +1,6 @@
-package com.hihelloy.hollowKnightMC;
+package com.hihelloy.hollowKnightMC.entities;
 
+import com.hihelloy.hollowKnightMC.managers.ConfigManager;
 import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.disguisetypes.Disguise;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
@@ -19,13 +20,14 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.Random;
 
 import static com.hihelloy.hollowKnightMC.HollowKnightMC.plugin;
-import static com.hihelloy.hollowKnightMC.NoskCommand.configManager;
 
 public class Nosk extends Spider {
     private BukkitTask shapeshiftTask;
+    private final ConfigManager configManager;
 
     public Nosk(Location loc, ConfigManager configManager) {
         super(EntityType.SPIDER, ((CraftWorld) loc.getWorld()).getHandle());
+        this.configManager = configManager;
         
         // Set custom attributes from config
         double speed = configManager.getConfig().getDouble("Nosk.Speed", 0.3);
@@ -52,8 +54,8 @@ public class Nosk extends Spider {
         // Add custom goals in priority order
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2D, true));
         this.goalSelector.addGoal(2, new LeapAtTargetGoal(this, 0.6F));
-        this.goalSelector.addGoal(3, new NoskDashGoal(this));
-        this.goalSelector.addGoal(4, new NoskBlobSpitGoal(this));
+        this.goalSelector.addGoal(3, new NoskDashGoal(this, configManager));
+        this.goalSelector.addGoal(4, new NoskBlobSpitGoal(this, configManager));
         this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, net.minecraft.world.entity.player.Player.class, 8.0F));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
         
@@ -70,7 +72,7 @@ public class Nosk extends Spider {
     @Override
     public net.minecraft.world.entity.EntityDimensions getDimensions(net.minecraft.world.entity.Pose pose) {
         // Set custom dimensions - wider and taller than normal spider
-        return net.minecraft.world.entity.EntityDimensions.scalable(1.4F, 7.0F);
+        return net.minecraft.world.entity.EntityDimensions.scalable(1.4F, 0.9F);
     }
 
     public void startShapeshiftTask(Entity bukkitEntity) {
@@ -113,7 +115,7 @@ public class Nosk extends Spider {
         private final double dashSpeed;
         private final double dashHeight;
 
-        public NoskDashGoal(Nosk nosk) {
+        public NoskDashGoal(Nosk nosk, ConfigManager configManager) {
             this.nosk = nosk;
             this.maxCooldown = configManager.getConfig().getInt("Nosk.DashCooldown", 60);
             this.dashSpeed = configManager.getConfig().getDouble("Nosk.DashSpeed", 1.5);
@@ -157,7 +159,7 @@ public class Nosk extends Spider {
         private final int maxCooldown;
         private final float blobSpeed;
 
-        public NoskBlobSpitGoal(Nosk nosk) {
+        public NoskBlobSpitGoal(Nosk nosk, ConfigManager configManager) {
             this.nosk = nosk;
             this.maxCooldown = configManager.getConfig().getInt("Nosk.BlobSpitCooldown", 40);
             this.blobSpeed = (float) configManager.getConfig().getDouble("Nosk.BlobSpeed", 1.2);

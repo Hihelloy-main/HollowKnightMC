@@ -1,5 +1,7 @@
-package com.hihelloy.hollowKnightMC;
+package com.hihelloy.hollowKnightMC.commands;
 
+import com.hihelloy.hollowKnightMC.managers.KnightManager;
+import com.hihelloy.hollowKnightMC.players.KnightPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,9 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class KnightCommand implements CommandExecutor, TabCompleter {
-
     private final KnightManager knightManager;
-    private final List<String> subCommands = Arrays.asList("toggle", "soul");
 
     public KnightCommand(KnightManager knightManager) {
         this.knightManager = knightManager;
@@ -39,13 +39,16 @@ public class KnightCommand implements CommandExecutor, TabCompleter {
                     player.sendMessage(ChatColor.RED + "You don't have permission to use Knight abilities!");
                     return true;
                 }
-                knightManager.enableKnightAbilities(player);
-                player.sendMessage(ChatColor.GREEN + "Knight abilities enabled!");
-                player.sendMessage(ChatColor.GRAY + "Controls:");
-                player.sendMessage(ChatColor.GRAY + "- Double-tap SHIFT: Dash");
-                player.sendMessage(ChatColor.GRAY + "- SHIFT + SPACE (near wall): Wall Jump");
-                player.sendMessage(ChatColor.GRAY + "- Hold SHIFT + Right-click: Focus (heal)");
-                player.sendMessage(ChatColor.GRAY + "- Right-click: Vengeful Spirit");
+                if (knightManager.enableKnightAbilities(player)) {
+                    player.sendMessage(ChatColor.GREEN + "Knight abilities enabled!");
+                    player.sendMessage(ChatColor.GRAY + "Controls:");
+                    player.sendMessage(ChatColor.GRAY + "- Double-tap SHIFT: Dash");
+                    player.sendMessage(ChatColor.GRAY + "- SHIFT + SPACE (near wall): Wall Jump");
+                    player.sendMessage(ChatColor.GRAY + "- Hold SHIFT + Right-click: Focus (heal)");
+                    player.sendMessage(ChatColor.GRAY + "- Left-click: Vengeful Spirit");
+                } else {
+                    player.sendMessage(ChatColor.RED + "Failed to enable Knight abilities!");
+                }
             }
             return true;
         }
@@ -59,7 +62,18 @@ public class KnightCommand implements CommandExecutor, TabCompleter {
                     return true;
                 }
                 KnightPlayer knightPlayer = knightManager.getKnightPlayer(player);
-                player.sendMessage(ChatColor.BLUE + "Soul: " + knightPlayer.getCurrentSoul() + "/" + knightPlayer.getMaxSoul());
+                if (knightPlayer != null) {
+                    player.sendMessage(ChatColor.BLUE + "Soul: " + knightPlayer.getCurrentSoul() + "/" + knightPlayer.getMaxSoul());
+                }
+                break;
+
+            case "reload":
+                if (!player.hasPermission("hollowknightmc.admin")) {
+                    player.sendMessage(ChatColor.RED + "You don't have permission to reload the config!");
+                    return true;
+                }
+                knightManager.reloadConfig();
+                player.sendMessage(ChatColor.GREEN + "Knight configuration reloaded!");
                 break;
 
             case "toggle":
@@ -67,7 +81,7 @@ public class KnightCommand implements CommandExecutor, TabCompleter {
                 return onCommand(sender, command, label, new String[0]);
 
             default:
-                player.sendMessage(ChatColor.RED + "Usage: /knight [toggle|soul]");
+                player.sendMessage(ChatColor.RED + "Usage: /knight [toggle|soul|reload]");
                 break;
         }
 
@@ -77,16 +91,11 @@ public class KnightCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> completions = new ArrayList<>();
-
+        
         if (args.length == 1) {
-            String current = args[0].toLowerCase();
-            for (String sub : subCommands) {
-                if (sub.startsWith(current)) {
-                    completions.add(sub);
-                }
-            }
+            completions.addAll(Arrays.asList("toggle", "soul", "reload"));
         }
-
+        
         return completions;
     }
 }

@@ -1,5 +1,9 @@
-package com.hihelloy.hollowKnightMC;
+package com.hihelloy.hollowKnightMC.listeners;
 
+import com.hihelloy.hollowKnightMC.HollowKnightMC;
+import com.hihelloy.hollowKnightMC.managers.BossManager;
+import com.hihelloy.hollowKnightMC.players.KnightPlayer;
+import com.hihelloy.hollowKnightMC.players.HornetPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,6 +50,12 @@ public class BossEventListener implements Listener {
             KnightPlayer knightPlayer = HollowKnightMC.plugin.getKnightManager().getKnightPlayer(killer);
             if (knightPlayer != null) {
                 knightPlayer.addSoul(33); // Large soul reward for boss kills
+            }
+            
+            // Give silk to hornet players
+            HornetPlayer hornetPlayer = HollowKnightMC.plugin.getHornetManager().getHornetPlayer(killer);
+            if (hornetPlayer != null) {
+                hornetPlayer.addSilk(20); // Large silk reward for boss kills
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.hihelloy.hollowKnightMC;
+package com.hihelloy.hollowKnightMC.listeners;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

@@ -1,36 +1,62 @@
 # HollowKnightMC Plugin
 
-A Minecraft Bukkit/Spigot plugin that adds Hollow Knight inspired mobs to your server.
+A comprehensive Minecraft Bukkit/Spigot plugin that adds complete Hollow Knight and Silksong content to your server.
 
 ## Features
 
-### Knight Player Abilities
+### Knight & Hornet Player Abilities
+
+#### Knight Abilities
 - **Dash**: Quick movement ability with invulnerability frames
 - **Wall Jump**: Jump off walls for enhanced mobility  
 - **Double Jump**: Additional jump in mid-air
-- **Crystal Dash**: Charged dash with longer distance
-- **Super Dash**: Extended dash ability
 - **Soul System**: Gain soul from combat, use for abilities
 - **Focus**: Spend soul to heal yourself
-- **Vengeful Spirit**: Ranged soul projectile attack
-- **Shade Soul**: Upgraded piercing projectile
-- **Howling Wraiths**: Area-of-effect soul attack
+- **Vengeful Spirit**: Ranged soul projectile attack (Left Click)
 - **Custom Stats**: Configurable health, speed, damage, and size
 - **Visual Effects**: Particles and sounds for all abilities
 - **Scoreboard**: Real-time display of stats and abilities
 
-### Boss Entities
-The plugin includes 10 iconic Hollow Knight bosses:
-1. **Hornet** - Fast, agile fighter with needle throws
-2. **Shadow Knight** - Dark mirror with void abilities
-3. **Mantis Lord** - Precise warrior with boomerang claws
-4. **Soul Master** - Floating mage with soul attacks
-5. **Dung Defender** - Bouncing tank with dung balls
-6. **Broken Vessel** - Infected vessel with balloon summons
-7. **Crystal Guardian** - Laser-shooting crystal entity
-8. **Watcher Knight** - Rolling armored guardian
-9. **Traitor Lord** - Powerful mantis with shockwave attacks
-10. **Grimm** - Master of nightmares with fire abilities
+#### Hornet Abilities
+- **Dash**: Fast agile dash with shorter cooldown
+- **Needle Throw**: Ranged silk-based projectile (Left Click)
+- **Silk Trap**: Place web traps (Right Click)
+- **Silk System**: Gain silk from combat, regenerates over time
+- **Enhanced Mobility**: Higher speed and jump than Knight
+- **Custom Stats**: Configurable health, speed, damage, and size
+- **Visual Effects**: Silk particles and unique sounds
+
+### Complete Boss Collection
+The plugin includes **25 bosses** from both Hollow Knight and Silksong:
+
+#### Hollow Knight Bosses (15)
+1. **Hornet** - Agile fighter with needle attacks
+2. **Shadow Knight** - Dark mirror entity
+3. **Mantis Lord** - Precise warrior
+4. **Soul Master** - Floating soul mage
+5. **Dung Defender** - Bouncing tank
+6. **Broken Vessel** - Infected vessel
+7. **Crystal Guardian** - Crystal laser entity
+8. **Watcher Knight** - Rolling guardian
+9. **Traitor Lord** - Powerful mantis
+10. **Grimm** - Master of nightmares
+11. **The Radiance** - Final boss entity
+12. **Nightmare King Grimm** - Ultimate Grimm form
+13. **Absolute Radiance** - Godmaster final boss
+14. **Pure Vessel** - Perfect Knight form
+15. **Sisters of Battle** - Enhanced Mantis Lords
+
+#### Silksong Bosses (10)
+16. **Lace** - Swift silk warrior
+17. **Moss Mother** - Nature guardian
+18. **Sharpe** - Bone collector
+19. **Gannet** - Flying predator
+20. **Carmelita** - Spider queen
+21. **Macabre** - Death dancer
+22. **Krow** - Crow king
+23. **Bone Bottom** - Skeletal giant
+24. **Seth** - Fire serpent
+25. **Coral** - Ocean guardian
 
 ### Nosk Entity
 - **Nosk Entity**: A custom spider-based mob with special abilities
@@ -46,6 +72,43 @@ The plugin includes 10 iconic Hollow Knight bosses:
 - LibsDisguises plugin (required dependency)
 - Java 17 or higher
 
+## JitPack Integration
+
+This plugin is available through JitPack for easy integration:
+
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
+<dependency>
+    <groupId>com.github.hihelloy</groupId>
+    <artifactId>hollow-knight-mc</artifactId>
+    <version>2.0.0</version>
+</dependency>
+```
+
+## API Usage
+
+```java
+// Get the API
+HollowKnightAPI api = HollowKnightMC.plugin.getAPI();
+
+// Enable abilities for players
+api.enableKnightAbilities(player);
+api.enableHornetAbilities(player);
+
+// Get player instances
+KnightPlayer knight = api.getKnightPlayer(player);
+HornetPlayer hornet = api.getHornetPlayer(player);
+
+// Spawn bosses
+api.spawnBoss("grimm", player);
+```
+
 ## Installation
 
 1. Download LibsDisguises plugin and install it on your server
@@ -58,36 +121,39 @@ The plugin includes 10 iconic Hollow Knight bosses:
 
 - `/nosk` - Spawns a Nosk entity at your location (requires `hollowknightmc.nosk` permission)
 - `/knight` - Toggle Knight abilities on/off
-- `/knight soul` - Check your current soul amount
-- `/knight reload` - Reload configuration (admin only)
-- `/hkmc spawn <boss>` - Spawn a specific boss
-- `/hkmc list` - List all available bosses
+- `/knight [toggle|soul|reload]` - Knight management commands
+- `/hornet` - Toggle Hornet abilities on/off  
+- `/hornet [toggle|silk|reload]` - Hornet management commands
+- `/hkmc spawn <boss>` - Spawn any of the 25 bosses
+- `/hkmc list` - List all available bosses with status
 - `/hkmc reload` - Reload all configurations
+
+### Tab Completion
+All commands now support full tab completion for easy usage.
 
 ## Configuration
 
-The `config.yml` file allows you to customize:
+The expanded `config.yml` file allows you to customize:
 
-### Knight Abilities
+### Knight & Hornet Abilities
 - Health and movement stats
 - All ability toggles and parameters
 - Scoreboard settings
 - Ability cooldowns and costs
-- Soul system parameters
+- Soul/Silk system parameters
 - Combat damage values
 - Visual effect toggles
 
+### All 25 Bosses
+- Individual boss enable/disable for each boss
+- Health, speed, and damage values
+- Spawn chances and behavior
+- Fully configurable stats per boss
+
 ### Nosk Entity
 - Health and speed values
-- Ability cooldowns
-- Attack ranges and damage
-- Shapeshift frequency
-
-### Boss Configuration
-- Individual boss enable/disable
-- Health, speed, and damage values
-- Ability-specific parameters
-- Spawn chances and behavior
+- Ability cooldowns and ranges
+- Shapeshift frequency and types
 
 ## Building
 
@@ -103,10 +169,25 @@ The compiled JAR will be in the `target/` directory.
 
 - `hollowknightmc.nosk` - Allows spawning Nosk entities (default: op)
 - `hollowknightmc.knight` - Allows using Knight abilities (default: true)
-- `hollowknightmc.knight.admin` - Allows admin commands (default: op)
+- `hollowknightmc.hornet` - Allows using Hornet abilities (default: true)
 - `hollowknightmc.admin` - Allows admin commands for the plugin (default: op)
 
 ## Dependencies
 
 - Bukkit/Spigot API
 - LibsDisguises (required for shapeshifting feature)
+
+## Version 2.0.0 Features
+
+- ✅ Fixed all command tab completion
+- ✅ Working scoreboard system
+- ✅ Fixed PlayerJoinEvent handling
+- ✅ Restored NoskSpawner class
+- ✅ Corrected plugin.yml structure
+- ✅ Added complete API system
+- ✅ JitPack integration ready
+- ✅ All 25 bosses from both games
+- ✅ Both Knight and Hornet player types
+- ✅ Vengeful Spirit now uses left-click
+- ✅ Enhanced configuration system
+- ✅ Production-ready codebase

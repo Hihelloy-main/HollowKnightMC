@@ -1,5 +1,8 @@
-package com.hihelloy.hollowKnightMC;
+package com.hihelloy.hollowKnightMC.commands;
 
+import com.hihelloy.hollowKnightMC.HollowKnightMC;
+import com.hihelloy.hollowKnightMC.managers.BossManager;
+import com.hihelloy.hollowKnightMC.managers.ConfigManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,12 +18,6 @@ public class MainCommand implements CommandExecutor, TabCompleter {
     private final HollowKnightMC plugin;
     private final ConfigManager configManager;
     private final BossManager bossManager;
-
-    private final List<String> subCommands = Arrays.asList("reload", "list", "spawn");
-    private final List<String> bosses = Arrays.asList(
-            "Hornet", "ShadowKnight", "MantisLord", "SoulMaster", "DungDefender",
-            "BrokenVessel", "CrystalGuardian", "WatcherKnight", "TraitorLord", "Grimm"
-    );
 
     public MainCommand(HollowKnightMC plugin, ConfigManager configManager, BossManager bossManager) {
         this.plugin = plugin;
@@ -49,12 +46,14 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             case "reload":
                 configManager.reloadConfig();
                 plugin.getKnightManager().reloadConfig();
+                plugin.getHornetManager().reloadConfig();
                 bossManager.reloadConfig();
                 sender.sendMessage(ChatColor.GREEN + "HollowKnightMC configuration reloaded!");
                 break;
 
             case "list":
                 sender.sendMessage(ChatColor.GOLD + "=== Available Bosses ===");
+                String[] bosses = bossManager.getAllBossNames();
                 for (String boss : bosses) {
                     boolean enabled = configManager.getConfig().getBoolean("Bosses." + boss + ".Enabled", true);
                     String status = enabled ? ChatColor.GREEN + "✓" : ChatColor.RED + "✗";
@@ -67,15 +66,15 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage(ChatColor.RED + "Only players can spawn bosses!");
                     return true;
                 }
-
+                
                 if (args.length < 2) {
                     sender.sendMessage(ChatColor.RED + "Usage: /hkmc spawn <boss_name>");
                     return true;
                 }
-
+                
                 Player player = (Player) sender;
                 String bossName = args[1];
-
+                
                 if (bossManager.spawnBoss(bossName, player.getLocation())) {
                     player.sendMessage(ChatColor.GREEN + "Spawned " + bossName + "!");
                 } else {
@@ -94,27 +93,13 @@ public class MainCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> completions = new ArrayList<>();
-
-        if (!sender.hasPermission("hollowknightmc.admin")) {
-            return completions; // No suggestions if no permission
-        }
-
+        
         if (args.length == 1) {
-            String current = args[0].toLowerCase();
-            for (String sub : subCommands) {
-                if (sub.startsWith(current)) {
-                    completions.add(sub);
-                }
-            }
+            completions.addAll(Arrays.asList("reload", "list", "spawn"));
         } else if (args.length == 2 && args[0].equalsIgnoreCase("spawn")) {
-            String current = args[1].toLowerCase();
-            for (String boss : bosses) {
-                if (boss.toLowerCase().startsWith(current)) {
-                    completions.add(boss);
-                }
-            }
+            completions.addAll(Arrays.asList(bossManager.getAllBossNames()));
         }
-
+        
         return completions;
     }
 }

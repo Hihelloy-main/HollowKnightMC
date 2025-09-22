@@ -1,5 +1,7 @@
-package com.hihelloy.hollowKnightMC;
+package com.hihelloy.hollowKnightMC.managers;
 
+import com.hihelloy.hollowKnightMC.HollowKnightMC;
+import com.hihelloy.hollowKnightMC.players.HornetPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
@@ -11,77 +13,79 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class KnightManager {
+public class HornetManager {
     private final HollowKnightMC plugin;
     private final ConfigManager configManager;
-    private final Map<UUID, KnightPlayer> knightPlayers;
+    private final Map<UUID, HornetPlayer> hornetPlayers;
     private BukkitTask updateTask;
 
-    public KnightManager(HollowKnightMC plugin, ConfigManager configManager) {
+    public HornetManager(HollowKnightMC plugin, ConfigManager configManager) {
         this.plugin = plugin;
         this.configManager = configManager;
-        this.knightPlayers = new HashMap<>();
+        this.hornetPlayers = new HashMap<>();
         startUpdateTask();
     }
 
-    public void enableKnightAbilities(Player player) {
-        if (!configManager.getConfig().getBoolean("Knight.Enabled", true)) {
-            return;
+    public boolean enableHornetAbilities(Player player) {
+        if (!configManager.getConfig().getBoolean("Hornet.Enabled", true)) {
+            return false;
         }
 
         UUID uuid = player.getUniqueId();
-        KnightPlayer knightPlayer = new KnightPlayer(player, configManager);
-        knightPlayers.put(uuid, knightPlayer);
+        HornetPlayer hornetPlayer = new HornetPlayer(player, configManager);
+        hornetPlayers.put(uuid, hornetPlayer);
         
-        applyKnightAttributes(player);
-        knightPlayer.initializeSoul();
+        applyHornetAttributes(player);
+        hornetPlayer.initializeSilk();
         
         // Create scoreboard
         plugin.getScoreboardManager().createScoreboard(player);
+        
+        return true;
     }
 
-    public void disableKnightAbilities(Player player) {
+    public void disableHornetAbilities(Player player) {
         UUID uuid = player.getUniqueId();
-        knightPlayers.remove(uuid);
+        hornetPlayers.remove(uuid);
         resetPlayerAttributes(player);
         
         // Remove scoreboard
         plugin.getScoreboardManager().removeScoreboard(player);
     }
 
-    public KnightPlayer getKnightPlayer(Player player) {
-        return knightPlayers.get(player.getUniqueId());
+    public HornetPlayer getHornetPlayer(Player player) {
+        return hornetPlayers.get(player.getUniqueId());
     }
 
-    public boolean hasKnightAbilities(Player player) {
-        return knightPlayers.containsKey(player.getUniqueId());
+    public boolean hasHornetAbilities(Player player) {
+        return hornetPlayers.containsKey(player.getUniqueId());
     }
 
-    private void applyKnightAttributes(Player player) {
+    private void applyHornetAttributes(Player player) {
         // Set health
-        double maxHealth = configManager.getConfig().getDouble("Knight.MaxHealth", 18.0);
-        double startingHealth = configManager.getConfig().getDouble("Knight.StartingHealth", 10.0);
+        double maxHealth = configManager.getConfig().getDouble("Hornet.MaxHealth", 16.0);
+        double startingHealth = configManager.getConfig().getDouble("Hornet.StartingHealth", 12.0);
         
         player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxHealth);
         player.setHealth(Math.min(startingHealth, maxHealth));
         
-        // Set movement speed
-        float walkSpeed = (float) configManager.getConfig().getDouble("Knight.WalkSpeed", 0.25);
-        float flySpeed = (float) configManager.getConfig().getDouble("Knight.FlySpeed", 0.1);
+        // Set movement speed (Hornet is faster than Knight)
+        float walkSpeed = (float) configManager.getConfig().getDouble("Hornet.WalkSpeed", 0.3);
+        float flySpeed = (float) configManager.getConfig().getDouble("Hornet.FlySpeed", 0.15);
         
         player.setWalkSpeed(walkSpeed);
         player.setFlySpeed(flySpeed);
         
-        // Apply jump boost
-        int jumpBoost = configManager.getConfig().getInt("Knight.JumpBoost", 2);
+        // Apply jump boost (Hornet has higher jumps)
+        int jumpBoost = configManager.getConfig().getInt("Hornet.JumpBoost", 3);
         if (jumpBoost > 0) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, jumpBoost - 1, false, false));
         }
         
         // Set combat attributes
-        double meleeDamage = configManager.getConfig().getDouble("Knight.Combat.MeleeDamage", 3.0);
-        double attackSpeed = configManager.getConfig().getDouble("Knight.Combat.AttackSpeed", 1.5);
-        double knockbackResistance = configManager.getConfig().getDouble("Knight.Combat.KnockbackResistance", 0.2);
+        double meleeDamage = configManager.getConfig().getDouble("Hornet.Combat.MeleeDamage", 4.0);
+        double attackSpeed = configManager.getConfig().getDouble("Hornet.Combat.AttackSpeed", 2.0);
+        double knockbackResistance = configManager.getConfig().getDouble("Hornet.Combat.KnockbackResistance", 0.1);
         
         player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(meleeDamage);
         player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackSpeed);
@@ -106,8 +110,8 @@ public class KnightManager {
 
     private void startUpdateTask() {
         updateTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-            for (KnightPlayer knightPlayer : knightPlayers.values()) {
-                knightPlayer.update();
+            for (HornetPlayer hornetPlayer : hornetPlayers.values()) {
+                hornetPlayer.update();
             }
         }, 0L, 1L); // Run every tick
     }
@@ -118,33 +122,25 @@ public class KnightManager {
         }
         
         // Reset all players
-        for (UUID uuid : knightPlayers.keySet()) {
+        for (UUID uuid : hornetPlayers.keySet()) {
             Player player = Bukkit.getPlayer(uuid);
             if (player != null && player.isOnline()) {
                 resetPlayerAttributes(player);
             }
         }
-        knightPlayers.clear();
+        hornetPlayers.clear();
     }
 
     public void reloadConfig() {
         configManager.reloadConfig();
         
-        // Reapply attributes to all knight players
-        for (Map.Entry<UUID, KnightPlayer> entry : knightPlayers.entrySet()) {
+        // Reapply attributes to all hornet players
+        for (Map.Entry<UUID, HornetPlayer> entry : hornetPlayers.entrySet()) {
             Player player = Bukkit.getPlayer(entry.getKey());
             if (player != null && player.isOnline()) {
-                applyKnightAttributes(player);
+                applyHornetAttributes(player);
                 entry.getValue().reloadConfig(configManager);
             }
         }
-    }
-
-    public static KnightManager getKnightManager() {
-        return HollowKnightMC.plugin.getKnightManager();
-    }
-
-    public static ConfigManager getConfigManager() {
-        return HollowKnightMC.plugin.getConfigManager();
     }
 }

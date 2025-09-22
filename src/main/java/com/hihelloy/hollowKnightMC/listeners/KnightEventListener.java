@@ -1,6 +1,7 @@
-package com.hihelloy.hollowKnightMC;
+package com.hihelloy.hollowKnightMC.listeners;
 
-import org.bukkit.ChatColor;
+import com.hihelloy.hollowKnightMC.managers.KnightManager;
+import com.hihelloy.hollowKnightMC.players.KnightPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -13,13 +14,8 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.metadata.MetadataValue;
 
-import java.util.HashMap;
-import java.util.UUID;
-
 public class KnightEventListener implements Listener {
     private final KnightManager knightManager;
-    private final HashMap<UUID, Long> lastJump = new HashMap<>();
-    private final long DOUBLE_JUMP_DELAY = 400;
 
     public KnightEventListener(KnightManager knightManager) {
         this.knightManager = knightManager;
@@ -28,13 +24,11 @@ public class KnightEventListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        if (player.hasPermission("hollowknightmc.knight") && 
-            HollowKnightMC.plugin.getConfigManager().getConfig().getBoolean("Plugin.AutoEnableKnight", true)) {
+        if (player.hasPermission("hollowknightmc.knight")) {
             // Auto-enable knight abilities for players with permission
             knightManager.enableKnightAbilities(player);
         }
     }
-
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
@@ -49,6 +43,7 @@ public class KnightEventListener implements Listener {
         if (knightPlayer == null) return;
         
         if (event.isSneaking()) {
+            // Check for double-tap dash
             knightPlayer.performDash();
         }
     }
@@ -92,28 +87,7 @@ public class KnightEventListener implements Listener {
         if (player.isSneaking() && player.getVelocity().getY() > 0) {
             knightPlayer.performWallJump();
         }
-
-        UUID uuid = player.getUniqueId();
-
-        // Detect jump: Y increases and player was on ground
-        if (event.getFrom().getY() < event.getTo().getY() && player.isOnGround()) {
-            long now = System.currentTimeMillis();
-            if (lastJump.containsKey(uuid)) {
-                long lastTime = lastJump.get(uuid);
-                if (now - lastTime <= DOUBLE_JUMP_DELAY) {
-                    // Double jump detected
-                    knightPlayer.performDoubleJump();
-                    lastJump.remove(uuid);
-                    return;
-                }
-            }
-            lastJump.put(uuid, now);
-        }
-
-
     }
-
-
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
@@ -145,44 +119,15 @@ public class KnightEventListener implements Listener {
             
             if (knightPlayer != null && event.getEntity() instanceof LivingEntity) {
                 // Add soul on hit
-                int soulPerHit = knightManager.getKnightManager().getConfigManager()
-                    .getConfig().getInt("Knight.Soul.SoulPerHit", 3);
+                int soulPerHit = 3;
                 knightPlayer.addSoul(soulPerHit);
                 
                 // Check if target dies to give kill soul
                 LivingEntity target = (LivingEntity) event.getEntity();
                 if (target.getHealth() - event.getFinalDamage() <= 0) {
-                    int soulPerKill = knightManager.getKnightManager().getConfigManager()
-                        .getConfig().getInt("Knight.Soul.SoulPerKill", 11);
+                    int soulPerKill = 11;
                     knightPlayer.addSoul(soulPerKill);
                 }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onFallDamage(EntityDamageEvent event) {
-        if (!(event.getEntity() instanceof Player player)) return;
-        Player player1 = (Player) event.getEntity();
-        KnightPlayer knightPlayer = knightManager.getKnightPlayer(player1);
-
-        if (event.getCause() == EntityDamageEvent.DamageCause.FALL && player.hasPermission("hollowknightmc.knight")) {
-            event.setCancelled(true);
-            double damage = event.getDamage();
-            double health = player1.getHealth();
-            player1.setHealth(health + damage);
-            player1.sendMessage(ChatColor.YELLOW + "You were supposed to take fall damage but your Knight powers saved you!");
-        }
-    }
-
-    @EventHandler
-    public void onCommand(PlayerCommandPreprocessEvent event) {
-        String msg = event.getMessage().toLowerCase();
-        Player player = event.getPlayer();
-        if (msg.equals("/reload") || msg.equals("/bukkit:reload")) {
-            if (player.hasPermission("hollowknightmc.knight") &&
-                    HollowKnightMC.plugin.getConfigManager().getConfig().getBoolean("Plugin.AutoEnableKnight", true)) {
-                knightManager.enableKnightAbilities(player);
             }
         }
     }
@@ -206,15 +151,11 @@ public class KnightEventListener implements Listener {
                         Player shooter = (Player) projectile.getShooter();
                         KnightPlayer knightPlayer = knightManager.getKnightPlayer(shooter);
                         if (knightPlayer != null) {
-                            int soulPerHit = knightManager.getKnightManager().getConfigManager()
-                                .getConfig().getInt("Knight.Soul.SoulPerHit", 3);
-                            knightPlayer.addSoul(soulPerHit);
+                            knightPlayer.addSoul(3);
                             
                             // Check for kill
                             if (target.getHealth() - damage <= 0) {
-                                int soulPerKill = knightManager.getKnightManager().getConfigManager()
-                                    .getConfig().getInt("Knight.Soul.SoulPerKill", 11);
-                                knightPlayer.addSoul(soulPerKill);
+                                knightPlayer.addSoul(11);
                             }
                         }
                     }

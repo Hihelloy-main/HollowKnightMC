@@ -1,41 +1,49 @@
 name: HollowKnightMC
-version: '${project.version}'
+version: '2.0.0'
 main: com.hihelloy.hollowKnightMC.HollowKnightMC
 api-version: '1.20'
-prefix: HollowKnightMC
-authors: [ Hihelloy ]
-description: A Minecraft plugin that adds Hollow Knight inspired mobs
-website: https://github.com/Hihelloy-main/HollowKnightMC
-
-commands:
-    nosk:
-        description: Spawns a Nosk entity
-        usage: /<command>
-        permission: hollowknightmc.nosk
-        permission-message: You don't have permission to use this command.
-    knight:
-        description: Toggle Knight abilities or check soul
-        usage: /<command> [toggle|soul]
-        permission: hollowknightmc.knight
-        permission-message: You don't have permission to use this command.
-    hkmc:
-        description: Main command for the plugin
-        usage: /<command> [reload|list|spawn]
-        permission: hollowknightmc.admin
-        permission-message: You don't have permission to use this command.
-
-permissions:
-    hollowknightmc.nosk:
-        description: Allows spawning Nosk entities
-        default: op
-    hollowknightmc.knight:
-        description: Allows using Knight abilities
-        default: true
-    hollowknightmc.knight.admin:
-        description: Allows admin commands for Knight abilities
-        default: op
-    hollowknightmc.admin:
-        description: Allows usage of the main command
-        default: op
+author: hihelloy
+description: A comprehensive Minecraft plugin that adds Hollow Knight and Silksong content
+website: https://github.com/hihelloy/hollow-knight-mc
 
 depend: [LibsDisguises]
+
+commands:
+  nosk:
+    description: Spawn a Nosk entity
+    usage: /nosk
+    permission: hollowknightmc.nosk
+  knight:
+    description: Manage Knight abilities
+    usage: /knight [toggle|soul|reload]
+    permission: hollowknightmc.knight
+  hornet:
+    description: Manage Hornet abilities
+    usage: /hornet [toggle|silk|reload]
+    permission: hollowknightmc.hornet
+  hkmc:
+    description: Main HollowKnightMC commands
+    usage: /hkmc [spawn|list|reload]
+    permission: hollowknightmc.admin
+
+permissions:
+  hollowknightmc.*:
+    description: All HollowKnightMC permissions
+    default: op
+    children:
+      hollowknightmc.knight: true
+      hollowknightmc.hornet: true
+      hollowknightmc.nosk: true
+      hollowknightmc.admin: true
+  hollowknightmc.knight:
+    description: Allows using Knight abilities
+    default: true
+  hollowknightmc.hornet:
+    description: Allows using Hornet abilities
+    default: true
+  hollowknightmc.nosk:
+    description: Allows spawning Nosk entities
+    default: op
+  hollowknightmc.admin:
+    description: Allows admin commands
+    default: op

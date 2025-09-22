@@ -1,18 +1,19 @@
 package com.hihelloy.hollowKnightMC;
 
-import org.bukkit.OfflinePlayer;
+import com.hihelloy.hollowKnightMC.api.HollowKnightAPI;
+import com.hihelloy.hollowKnightMC.commands.*;
+import com.hihelloy.hollowKnightMC.listeners.*;
+import com.hihelloy.hollowKnightMC.managers.*;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.*;
-
-import java.util.Set;
 
 public final class HollowKnightMC extends JavaPlugin {
     public static HollowKnightMC plugin;
     private ConfigManager configManager;
     private KnightManager knightManager;
+    private HornetManager hornetManager;
     private BossManager bossManager;
     private ScoreboardManager scoreboardManager;
-    private Scoreboard scoreboard;
+    private HollowKnightAPI api;
 
     @Override
     public void onEnable() {
@@ -24,31 +25,22 @@ public final class HollowKnightMC extends JavaPlugin {
         
         // Initialize managers
         knightManager = new KnightManager(this, configManager);
+        hornetManager = new HornetManager(this, configManager);
         bossManager = new BossManager(this, configManager);
         scoreboardManager = new ScoreboardManager(this, configManager);
         
-        // Initialize Knight manager
-        knightManager = new KnightManager(this, configManager);
-
+        // Initialize API
+        api = new HollowKnightAPI(this);
+        
         // Register commands
-        getCommand("nosk").setExecutor(new NoskCommand(configManager));
-        getCommand("nosk").setTabCompleter(new NoskCommand(configManager));
-        getCommand("knight").setExecutor(new KnightCommand(knightManager));
-        getCommand("knight").setTabCompleter(new KnightCommand(knightManager));
-        getCommand("hkmc").setExecutor(new MainCommand(this, configManager, bossManager));
-        getCommand("hkmc").setTabCompleter(new MainCommand(this, configManager, bossManager));
+        registerCommands();
         
         // Register listeners
-        getServer().getPluginManager().registerEvents(new NoskEventListener(), this);
-        getServer().getPluginManager().registerEvents(new KnightEventListener(knightManager), this);
-        getServer().getPluginManager().registerEvents(new BossEventListener(bossManager), this);
-        getServer().getPluginManager().registerEvents(new KnightEventListener(knightManager), this);
+        registerListeners();
         
-        getLogger().info("HollowKnightMC has been enabled!");
-        getLogger().info("Nosk entities can now be spawned with /nosk command");
-        getLogger().info("Knight abilities are now available for players!");
-        getLogger().info("10 Hollow Knight bosses are now available!");
-        getLogger().info("Knight abilities are now available for players!");
+        getLogger().info("HollowKnightMC v2.0.0 has been enabled!");
+        getLogger().info("Knight and Hornet abilities are now available!");
+        getLogger().info("All Hollow Knight and Silksong bosses are loaded!");
     }
 
     @Override
@@ -56,34 +48,37 @@ public final class HollowKnightMC extends JavaPlugin {
         if (knightManager != null) {
             knightManager.shutdown();
         }
+        if (hornetManager != null) {
+            hornetManager.shutdown();
+        }
         if (bossManager != null) {
             bossManager.shutdown();
         }
         if (scoreboardManager != null) {
             scoreboardManager.shutdown();
         }
-        if (knightManager != null) {
-            knightManager.shutdown();
-        }
         getLogger().info("HollowKnightMC has been disabled!");
     }
 
-    public ConfigManager getConfigManager() {
-        return configManager;
+    private void registerCommands() {
+        getCommand("nosk").setExecutor(new NoskCommand(configManager));
+        getCommand("knight").setExecutor(new KnightCommand(knightManager));
+        getCommand("hornet").setExecutor(new HornetCommand(hornetManager));
+        getCommand("hkmc").setExecutor(new MainCommand(this, configManager, bossManager));
     }
 
-    
-    public BossManager getBossManager() {
-        return bossManager;
-    }
-    
-    public ScoreboardManager getScoreboardManager() {
-        return scoreboardManager;
-    }
-    
-    public KnightManager getKnightManager() {
-        return knightManager;
+    private void registerListeners() {
+        getServer().getPluginManager().registerEvents(new NoskEventListener(), this);
+        getServer().getPluginManager().registerEvents(new KnightEventListener(knightManager), this);
+        getServer().getPluginManager().registerEvents(new HornetEventListener(hornetManager), this);
+        getServer().getPluginManager().registerEvents(new BossEventListener(bossManager), this);
     }
 
-    public Scoreboard getScoreboard() { return scoreboard; }
+    // Getters
+    public ConfigManager getConfigManager() { return configManager; }
+    public KnightManager getKnightManager() { return knightManager; }
+    public HornetManager getHornetManager() { return hornetManager; }
+    public BossManager getBossManager() { return bossManager; }
+    public ScoreboardManager getScoreboardManager() { return scoreboardManager; }
+    public HollowKnightAPI getAPI() { return api; }
 }

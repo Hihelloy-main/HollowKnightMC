@@ -1,5 +1,7 @@
-package com.hihelloy.hollowKnightMC;
+package com.hihelloy.hollowKnightMC.players;
 
+import com.hihelloy.hollowKnightMC.HollowKnightMC;
+import com.hihelloy.hollowKnightMC.managers.ConfigManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -31,10 +33,6 @@ public class KnightPlayer {
     private boolean isDashing = false;
     private int dashInvulnerabilityTimer = 0;
     private boolean hasDoubleJumped = false;
-    private boolean isSuperDashing = false;
-    private boolean isCrystalDashing = false;
-    private int crystalDashChargeTimer = 0;
-    private boolean hasShadeCloak = false;
 
     public KnightPlayer(Player player, ConfigManager configManager) {
         this.player = player;
@@ -60,14 +58,6 @@ public class KnightPlayer {
             hasDoubleJumped = false;
         }
         
-        // Handle crystal dash charging
-        if (isCrystalDashing && crystalDashChargeTimer > 0) {
-            crystalDashChargeTimer--;
-            if (crystalDashChargeTimer <= 0) {
-                executeCrystalDash();
-            }
-        }
-        
         // Handle focus healing
         if (isFocusing) {
             focusTimer--;
@@ -85,114 +75,6 @@ public class KnightPlayer {
         updateSoulDisplay();
     }
 
-    public boolean performDoubleJump() {
-        if (!configManager.getConfig().getBoolean("Knight.DoubleJump.Enabled", true)) return false;
-        if (hasDoubleJumped || player.isOnGround()) return false;
-        
-        double height = configManager.getConfig().getDouble("Knight.DoubleJump.Height", 1.0);
-        
-        Vector velocity = player.getVelocity();
-        velocity.setY(height);
-        player.setVelocity(velocity);
-        hasDoubleJumped = true;
-        
-        // Effects
-        player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_FLAP, 0.5f, 1.5f);
-        if (configManager.getConfig().getBoolean("Knight.Effects.DashParticles", true)) {
-            player.getWorld().spawnParticle(Particle.CLOUD, player.getLocation(), 5, 0.3, 0.3, 0.3, 0.05);
-        }
-        
-        return true;
-    }
-
-    public boolean startCrystalDash() {
-        if (!configManager.getConfig().getBoolean("Knight.CrystalDash.Enabled", true)) return false;
-        if (isCrystalDashing) return false;
-        
-        int chargeTime = configManager.getConfig().getInt("Knight.CrystalDash.ChargeTime", 40);
-        
-        isCrystalDashing = true;
-        crystalDashChargeTimer = chargeTime;
-        
-        // Effects
-        player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 1.0f, 0.8f);
-        
-        return true;
-    }
-    
-    private void executeCrystalDash() {
-        double distance = configManager.getConfig().getDouble("Knight.CrystalDash.Distance", 12.0);
-        double speed = configManager.getConfig().getDouble("Knight.CrystalDash.Speed", 1.8);
-        
-        Vector direction = player.getLocation().getDirection().normalize();
-        direction.multiply(speed);
-        direction.setY(0.1);
-        
-        player.setVelocity(direction);
-        isCrystalDashing = false;
-        
-        // Effects
-        player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 1.0f, 0.5f);
-        if (configManager.getConfig().getBoolean("Knight.Effects.DashParticles", true)) {
-            player.getWorld().spawnParticle(Particle.CRIT, player.getLocation(), 15, 0.5, 0.5, 0.5, 0.2);
-        }
-    }
-
-    public boolean castShadeSoul() {
-        if (!configManager.getConfig().getBoolean("Knight.Soul.ShadeSoul.Enabled", true)) return false;
-        if (vengefulSpiritCooldown > 0) return false;
-        
-        int soulCost = configManager.getConfig().getInt("Knight.Soul.ShadeSoul.SoulCost", 22);
-        if (currentSoul < soulCost) return false;
-        
-        double damage = configManager.getConfig().getDouble("Knight.Soul.ShadeSoul.Damage", 8.0);
-        double speed = configManager.getConfig().getDouble("Knight.Soul.ShadeSoul.Speed", 2.5);
-        
-        currentSoul -= soulCost;
-        vengefulSpiritCooldown = 30;
-        
-        // Create projectile
-        Projectile spirit = player.launchProjectile(Snowball.class);
-        spirit.setVelocity(player.getLocation().getDirection().multiply(speed));
-        spirit.setMetadata("shade_soul", new FixedMetadataValue(HollowKnightMC.plugin, damage));
-        spirit.setMetadata("knight_projectile", new FixedMetadataValue(HollowKnightMC.plugin, true));
-        spirit.setMetadata("piercing", new FixedMetadataValue(HollowKnightMC.plugin, true));
-        
-        // Effects
-        player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SHOOT, 1.0f, 1.2f);
-        if (configManager.getConfig().getBoolean("Knight.Effects.SoulParticles", true)) {
-            player.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME, player.getLocation().add(0, 1, 0), 8, 0.3, 0.3, 0.3, 0.1);
-        }
-        
-        return true;
-    }
-
-    public boolean castHowlingWraiths() {
-        if (!configManager.getConfig().getBoolean("Knight.Soul.HowlingWraiths.Enabled", true)) return false;
-        
-        int soulCost = configManager.getConfig().getInt("Knight.Soul.HowlingWraiths.SoulCost", 33);
-        if (currentSoul < soulCost) return false;
-        
-        double damage = configManager.getConfig().getDouble("Knight.Soul.HowlingWraiths.Damage", 6.0);
-        double radius = configManager.getConfig().getDouble("Knight.Soul.HowlingWraiths.Radius", 5.0);
-        
-        currentSoul -= soulCost;
-        
-        // Damage nearby entities
-        for (org.bukkit.entity.Entity entity : player.getNearbyEntities(radius, radius, radius)) {
-            if (entity instanceof org.bukkit.entity.LivingEntity && !(entity instanceof Player)) {
-                ((org.bukkit.entity.LivingEntity) entity).damage(damage, player);
-            }
-        }
-        
-        // Effects
-        player.playSound(player.getLocation(), Sound.ENTITY_WITHER_AMBIENT, 1.0f, 0.8f);
-        if (configManager.getConfig().getBoolean("Knight.Effects.SoulParticles", true)) {
-            player.getWorld().spawnParticle(Particle.SOUL, player.getLocation(), 20, radius/2, 1, radius/2, 0.1);
-        }
-        
-        return true;
-    }
     public boolean performDash() {
         if (!configManager.getConfig().getBoolean("Knight.Dash.Enabled", true)) return false;
         if (dashCooldown > 0) return false;

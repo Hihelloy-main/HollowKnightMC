@@ -1,5 +1,6 @@
-package com.hihelloy.hollowKnightMC;
+package com.hihelloy.hollowKnightMC.managers;
 
+import com.hihelloy.hollowKnightMC.HollowKnightMC;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -15,7 +16,7 @@ public class ConfigManager {
     public void reloadConfig() {
         plugin.reloadConfig();
         this.config = plugin.getConfig();
-        Bukkit.getLogger().info("HollowKnightMC " + plugin.getDescription().getVersion() + " reloaded!");
+        Bukkit.getLogger().info("HollowKnightMC configuration reloaded!");
     }
 
     public FileConfiguration getConfig() {
