@@ -174,6 +174,7 @@ The compiled JAR will be in the `target/` directory.
 - `hollowknightmc.knight` - Allows using Knight abilities (default: true)
 - `hollowknightmc.hornet` - Allows using Hornet abilities (default: true)
 - `hollowknightmc.admin` - Allows admin commands for the plugin (default: op)
+- 1
 
 ## Dependencies
 
