@@ -23,8 +23,4 @@ Thumbs.db
 
 # Logs
 *.log
-
-# NMS / Mojang code (DO NOT COMMIT)
-src/main/java/net/minecraft/
-src/main/java/com/mojang/
-libs/
+net.minecraft.*

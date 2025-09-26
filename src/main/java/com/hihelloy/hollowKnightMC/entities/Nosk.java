@@ -64,10 +64,6 @@ public class Nosk extends Spider {
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, net.minecraft.world.entity.player.Player.class, true));
     }
 
-    @Override
-    public net.minecraft.world.entity.Pose getPose() {
-        return net.minecraft.world.entity.Pose.STANDING;
-    }
 
     @Override
     public net.minecraft.world.entity.EntityDimensions getDimensions(net.minecraft.world.entity.Pose pose) {

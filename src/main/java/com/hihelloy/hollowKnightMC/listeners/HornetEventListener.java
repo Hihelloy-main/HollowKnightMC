@@ -22,15 +22,6 @@ public class HornetEventListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        if (player.hasPermission("hollowknightmc.hornet")) {
-            // Auto-enable hornet abilities for players with permission
-            hornetManager.enableHornetAbilities(player);
-        }
-    }
-
-    @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         hornetManager.disableHornetAbilities(event.getPlayer());
     }

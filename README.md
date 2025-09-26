@@ -1,36 +1,54 @@
-[![GitHub release](https://img.shields.io/github/v/release/Hihelloy-main/HollowKnightMC?style=flat-square)](https://github.com/Hihelloy-main/HollowKnightMC/releases)
-[![Github Downloads](https://img.shields.io/github/downloads/Hihelloy-main/HollowKnightMC/total.svg)](https://github.com/Hihelloy-main/HollowKnightMC/releases)
+# HollowKnightMC Plugin v2.0.0
 
-# HollowKnightMC Plugin
-
-A comprehensive Minecraft Bukkit/Spigot plugin that adds complete Hollow Knight and Silksong content to your server.
+A comprehensive Minecraft Bukkit/Spigot plugin that adds complete Hollow Knight and Silksong content to your server with advanced class system, addon support, and enhanced visual effects.
 
 ## Features
 
-### Knight & Hornet Player Abilities
+### Command-Based Class System
+Players use commands to get Knight or Hornet abilities, with no auto-enabling.
+
+### Enhanced Knight & Hornet Classes
 
 #### Knight Abilities
 - **Dash**: Quick movement ability with invulnerability frames
 - **Wall Jump**: Jump off walls for enhanced mobility  
 - **Double Jump**: Additional jump in mid-air
+- **Crystal Dash**: Charged long-distance dash with damage
 - **Soul System**: Gain soul from combat, use for abilities
 - **Focus**: Spend soul to heal yourself
 - **Vengeful Spirit**: Ranged soul projectile attack (Left Click)
+- **Shade Soul**: Upgraded piercing projectile
+- **Howling Wraiths**: Area-of-effect soul attack
 - **Custom Stats**: Configurable health, speed, damage, and size
+- **Advanced Scoreboard**: Real-time display with animations and current actions
 - **Visual Effects**: Particles and sounds for all abilities
-- **Scoreboard**: Real-time display of stats and abilities
 
 #### Hornet Abilities
 - **Dash**: Fast agile dash with shorter cooldown
 - **Needle Throw**: Ranged silk-based projectile (Left Click)
 - **Silk Trap**: Place web traps (Right Click)
+- **Silk Lash**: Melee combo attack with knockback
+- **Spike Trap**: Place damaging spike traps
 - **Silk System**: Gain silk from combat, regenerates over time
 - **Enhanced Mobility**: Higher speed and jump than Knight
 - **Custom Stats**: Configurable health, speed, damage, and size
+- **Advanced Scoreboard**: Real-time display with animations
 - **Visual Effects**: Silk particles and unique sounds
 
+### Addon System
+- **Custom Ability API**: Create addon abilities that integrate seamlessly
+- **JAR Loading**: Place addon JARs in `plugins/HollowKnightMC/abilities/`
+- **Scoreboard Integration**: Addon abilities appear on the scoreboard
+- **Class Support**: Addons can target Knight, Hornet, or both classes
+
+### Enhanced Visual Effects
+- **Advanced Particles**: Multiple particle types with configurable counts
+- **Falling Block Effects**: Dynamic falling blocks for abilities
+- **Sound System**: Configurable sounds for all abilities
+- **Animated Scoreboard**: Color-changing title and real-time updates
+
 ### Complete Boss Collection
-The plugin includes **25 bosses** from both Hollow Knight and Silksong:
+The plugin includes **25 bosses** from both Hollow Knight and Silksong with NMS implementation:
 
 #### Hollow Knight Bosses (15)
 1. **Hornet** - Agile fighter with needle attacks
@@ -60,6 +78,12 @@ The plugin includes **25 bosses** from both Hollow Knight and Silksong:
 23. **Bone Bottom** - Skeletal giant
 24. **Seth** - Fire serpent
 25. **Coral** - Ocean guardian
+
+### Split Configuration System
+- **Main config.yml**: Global plugin settings
+- **Knight.yml**: All Knight-specific configurations
+- **Hornet.yml**: All Hornet-specific configurations  
+- **Bosses.yml**: All boss configurations and abilities
 
 ### Nosk Entity
 - **Nosk Entity**: A custom spider-based mob with special abilities
@@ -122,32 +146,47 @@ api.spawnBoss("grimm", player);
 
 ## Commands
 
-- `/nosk` - Spawns a Nosk entity at your location (requires `hollowknightmc.nosk` permission)
-- `/knight` - Toggle Knight abilities on/off
-- `/knight [toggle|soul|reload]` - Knight management commands
-- `/hornet` - Toggle Hornet abilities on/off  
-- `/hornet [toggle|silk|reload]` - Hornet management commands
-- `/hkmc spawn <boss>` - Spawn any of the 25 bosses
+- `/knight give` - Get Knight abilities
+- `/knight remove` - Remove Knight abilities
+- `/knight abilities` - View Knight abilities
+- `/hornet give` - Get Hornet abilities
+- `/hornet remove` - Remove Hornet abilities
+- `/hornet abilities` - View Hornet abilities
+- `/hkmc reload` - Reload all configurations (admin only)
+- `/hkmc spawn <boss>` - Spawn any of the 25 bosses (admin only)
 - `/hkmc list` - List all available bosses with status
-- `/hkmc reload` - Reload all configurations
+- `/nosk` - Spawns a Nosk entity at your location (requires `hollowknightmc.nosk` permission)
 
 ### Tab Completion
 All commands now support full tab completion for easy usage.
 
 ## Configuration
 
-The expanded `config.yml` file allows you to customize:
+The split configuration system allows you to customize:
 
-### Knight & Hornet Abilities
+### Main Configuration (config.yml)
+- Global plugin settings
+- Scoreboard configuration
+- Addon system settings
+- Visual effects multipliers
+
+### Knight Configuration (Knight.yml)
 - Health and movement stats
-- All ability toggles and parameters
+- All Knight ability toggles and parameters
 - Scoreboard settings
 - Ability cooldowns and costs
-- Soul/Silk system parameters
+- Soul system parameters
 - Combat damage values
 - Visual effect toggles
 
-### All 25 Bosses
+### Hornet Configuration (Hornet.yml)
+- Health and movement stats
+- All Hornet ability toggles and parameters
+- Silk system parameters
+- Combat damage values
+- Visual effect toggles
+
+### Boss Configuration (Bosses.yml)
 - Individual boss enable/disable for each boss
 - Health, speed, and damage values
 - Spawn chances and behavior
@@ -170,28 +209,63 @@ The compiled JAR will be in the `target/` directory.
 
 ## Permissions
 
-- `hollowknightmc.nosk` - Allows spawning Nosk entities (default: op)
+- `hollowknightmc.*` - All permissions (default: op)
+- `hollowknightmc.use` - Allows using basic plugin features (default: true)
 - `hollowknightmc.knight` - Allows using Knight abilities (default: true)
 - `hollowknightmc.hornet` - Allows using Hornet abilities (default: true)
+- `hollowknightmc.nosk` - Allows spawning Nosk entities (default: op)
 - `hollowknightmc.admin` - Allows admin commands for the plugin (default: op)
-- 1
 
 ## Dependencies
 
 - Bukkit/Spigot API
 - LibsDisguises (required for shapeshifting feature)
 
+## Creating Addon Abilities
+
+To create custom abilities for the plugin:
+
+1. Create a new Java project with HollowKnightMC as a dependency
+2. Extend the `AddonAbility` class:
+
+```java
+public class MyCustomAbility extends AddonAbility {
+    public MyCustomAbility() {
+        super("MyAbility", "Custom ability description", "knight", 60, 10, "soul");
+    }
+    
+    @Override
+    public boolean execute(Player player) {
+        // Your ability logic here
+        return true;
+    }
+    
+    @Override
+    public boolean canUse(Player player) {
+        // Check if ability can be used
+        return true;
+    }
+    
+    // Implement other required methods...
+}
+```
+
+3. Compile to JAR and place in `plugins/HollowKnightMC/abilities/`
+4. Restart server to load the addon
+
 ## Version 2.0.0 Features
 
-- ✅ Fixed all command tab completion
-- ✅ Working scoreboard system
-- ✅ Fixed PlayerJoinEvent handling
-- ✅ Restored NoskSpawner class
-- ✅ Corrected plugin.yml structure
-- ✅ Added complete API system
-- ✅ JitPack integration ready
-- ✅ All 25 bosses from both games
-- ✅ Both Knight and Hornet player types
-- ✅ Vengeful Spirit now uses left-click
-- ✅ Enhanced configuration system
-- ✅ Production-ready codebase
+- ✅ **Command-Based Abilities**: Players use `/knight give` or `/hornet give`
+- ✅ **Addon System**: Full API for creating custom abilities
+- ✅ **Enhanced Visual Effects**: Advanced particles, falling blocks, animations
+- ✅ **Animated Scoreboard**: Real-time action display with color animations
+- ✅ **Split Configuration**: Separate config files for better organization
+- ✅ **NMS Boss Implementation**: All 25 bosses use proper NMS code
+- ✅ **Enhanced Abilities**: More Knight and Hornet abilities with visual effects
+- ✅ **Server Reload Protection**: Robust handling of server restarts
+- ✅ **Complete Tab Completion**: All commands have proper tab completion
+- ✅ **Working Scoreboard System**: Real-time stats and action display
+- ✅ **Addon JAR Loading**: Automatic loading from abilities folder
+- ✅ **Complete API System**: Full external plugin integration
+- ✅ **JitPack Ready**: Easy dependency management
+- ✅ **Production Ready**: Stable, tested, and optimized codebase

@@ -1,10 +1,9 @@
 name: HollowKnightMC
-version: '2.0.0'
+version: '2.0'
 main: com.hihelloy.hollowKnightMC.HollowKnightMC
 api-version: '1.20'
-author: hihelloy
+author: Hihelloy
 description: A comprehensive Minecraft plugin that adds Hollow Knight and Silksong content
-website: https://github.com/hihelloy/hollow-knight-mc
 
 depend: [LibsDisguises]
 
@@ -13,28 +12,40 @@ commands:
     description: Spawn a Nosk entity
     usage: /nosk
     permission: hollowknightmc.nosk
-  knight:
-    description: Manage Knight abilities
-    usage: /knight [toggle|soul|reload]
-    permission: hollowknightmc.knight
-  hornet:
-    description: Manage Hornet abilities
-    usage: /hornet [toggle|silk|reload]
-    permission: hollowknightmc.hornet
   hkmc:
     description: Main HollowKnightMC commands
-    usage: /hkmc [spawn|list|reload]
-    permission: hollowknightmc.admin
+    usage: /hkmc [select|abilities|spawn|list|reload]
+    permission: hollowknightmc.use
+  hkselect:
+    description: Select your class (Knight or Hornet)
+    usage: /hkselect [knight|hornet]
+    permission: hollowknightmc.use
+  hkabilities:
+    description: View abilities for your class
+    usage: /hkabilities
+    permission: hollowknightmc.use
+  knight:
+    description: Knight class commands
+    usage: /knight [give|remove|abilities]
+    permission: hollowknightmc.knight
+  hornet:
+    description: Hornet class commands
+    usage: /hornet [give|remove|abilities]
+    permission: hollowknightmc.hornet
 
 permissions:
   hollowknightmc.*:
     description: All HollowKnightMC permissions
     default: op
     children:
+      hollowknightmc.use: true
       hollowknightmc.knight: true
       hollowknightmc.hornet: true
       hollowknightmc.nosk: true
       hollowknightmc.admin: true
+  hollowknightmc.use:
+    description: Allows using basic HollowKnightMC features
+    default: true
   hollowknightmc.knight:
     description: Allows using Knight abilities
     default: true

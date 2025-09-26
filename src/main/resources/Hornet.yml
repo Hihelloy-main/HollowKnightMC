@@ -1,0 +1,88 @@
+# Hornet Player Configuration
+Hornet:
+  Enabled: true
+  
+  # Health settings (in half-hearts, 20 = 10 hearts)
+  MaxHealth: 16.0
+  StartingHealth: 12.0
+  
+  # Movement settings (Hornet is faster than Knight)
+  WalkSpeed: 0.3
+  FlySpeed: 0.15
+  JumpBoost: 3
+  
+  # Player size scaling
+  PlayerScale: 0.85
+  
+  # Dash ability
+  Dash:
+    Enabled: true
+    Cooldown: 30
+    Distance: 10.0
+    Height: 0.4
+    InvulnerabilityTicks: 8
+    ParticleType: "WHITE_ASH"
+    ParticleCount: 12
+    Sound: "ENTITY_BAT_TAKEOFF"
+    
+  # Silk system
+  Silk:
+    Enabled: true
+    MaxSilk: 50
+    StartingSilk: 25
+    SilkPerKill: 5
+    SilkPerHit: 2
+    RegenerationRate: 1 # silk per 2 seconds
+    ParticleType: "WHITE_ASH"
+    
+  # Needle throw ability - LEFT CLICK
+  NeedleThrow:
+    Enabled: true
+    SilkCost: 5
+    Damage: 5.0
+    Speed: 2.5
+    Range: 25.0
+    ParticleType: "WHITE_ASH"
+    Sound: "ENTITY_ARROW_SHOOT"
+    
+  # Silk trap ability - RIGHT CLICK
+  SilkTrap:
+    Enabled: true
+    SilkCost: 15
+    Duration: 300 # 15 seconds
+    SlowEffect: 2
+    ParticleType: "WHITE_ASH"
+    Sound: "BLOCK_WOOL_PLACE"
+    
+  # Silk Lash (melee combo)
+  SilkLash:
+    Enabled: true
+    SilkCost: 8
+    Damage: 6.0
+    Range: 4.0
+    KnockbackPower: 1.5
+    ParticleType: "WHITE_ASH"
+    Sound: "ENTITY_PLAYER_ATTACK_SWEEP"
+    
+  # Spike Trap
+  SpikeTrap:
+    Enabled: true
+    SilkCost: 20
+    Damage: 8.0
+    Duration: 200 # 10 seconds
+    ParticleType: "CRIT"
+    Sound: "BLOCK_ANVIL_PLACE"
+    
+  # Combat settings
+  Combat:
+    MeleeDamage: 4.0
+    AttackSpeed: 2.0
+    KnockbackResistance: 0.1
+    
+  # Visual effects
+  Effects:
+    DashParticles: true
+    SilkParticles: true
+    AttackParticles: true
+    FallingBlocks: true
+    AdvancedEffects: true

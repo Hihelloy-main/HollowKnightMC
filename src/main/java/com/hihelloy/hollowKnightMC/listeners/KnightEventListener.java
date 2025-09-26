@@ -22,15 +22,6 @@ public class KnightEventListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        if (player.hasPermission("hollowknightmc.knight")) {
-            // Auto-enable knight abilities for players with permission
-            knightManager.enableKnightAbilities(player);
-        }
-    }
-
-    @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         knightManager.disableKnightAbilities(event.getPlayer());
     }

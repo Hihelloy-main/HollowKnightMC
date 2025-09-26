@@ -1,0 +1,116 @@
+# Knight Player Configuration
+Knight:
+  Enabled: true
+  
+  # Health settings (in half-hearts, 20 = 10 hearts)
+  MaxHealth: 18.0
+  StartingHealth: 10.0
+  
+  # Movement settings
+  WalkSpeed: 0.25
+  FlySpeed: 0.1
+  JumpBoost: 2
+  
+  # Player size scaling (1.0 = normal size)
+  PlayerScale: 0.8
+  
+  # Dash ability
+  Dash:
+    Enabled: true
+    Cooldown: 40
+    Distance: 8.0
+    Height: 0.3
+    InvulnerabilityTicks: 10
+    ParticleType: "CLOUD"
+    ParticleCount: 15
+    Sound: "ENTITY_ENDERMAN_TELEPORT"
+    
+  # Wall jump ability
+  WallJump:
+    Enabled: true
+    Cooldown: 20
+    Height: 1.2
+    HorizontalBoost: 0.8
+    ParticleType: "CRIT"
+    Sound: "ENTITY_SLIME_JUMP"
+    
+  # Double jump ability
+  DoubleJump:
+    Enabled: true
+    Cooldown: 10
+    Height: 1.0
+    ParticleType: "CLOUD"
+    Sound: "ENTITY_ENDER_DRAGON_FLAP"
+    
+  # Soul abilities
+  Soul:
+    Enabled: true
+    MaxSoul: 99
+    StartingSoul: 33
+    SoulPerKill: 11
+    SoulPerHit: 3
+    ParticleType: "SOUL"
+    
+    # Focus (healing) ability
+    Focus:
+      Enabled: true
+      SoulCost: 33
+      HealAmount: 2.0
+      CastTime: 60
+      ParticleType: "HEART"
+      Sound: "BLOCK_BEACON_POWER_SELECT"
+      
+    # Vengeful Spirit (projectile) ability - LEFT CLICK
+    VengefulSpirit:
+      Enabled: true
+      SoulCost: 11
+      Damage: 4.0
+      Speed: 2.0
+      Range: 20.0
+      ParticleType: "SOUL"
+      Sound: "ENTITY_GHAST_SHOOT"
+      
+    # Shade Soul (upgraded projectile)
+    ShadeSoul:
+      Enabled: true
+      SoulCost: 22
+      Damage: 8.0
+      Speed: 2.5
+      Range: 25.0
+      Piercing: true
+      ParticleType: "SOUL_FIRE_FLAME"
+      Sound: "ENTITY_WITHER_SHOOT"
+      
+    # Howling Wraiths (area attack)
+    HowlingWraiths:
+      Enabled: true
+      SoulCost: 33
+      Damage: 6.0
+      Radius: 5.0
+      ParticleType: "SOUL"
+      Sound: "ENTITY_WITHER_AMBIENT"
+      
+  # Crystal Dash
+  CrystalDash:
+    Enabled: true
+    ChargeTime: 40
+    Distance: 12.0
+    Speed: 1.8
+    Damage: 5.0
+    ParticleType: "CRIT"
+    Sound: "BLOCK_GLASS_BREAK"
+    
+  # Combat settings
+  Combat:
+    MeleeDamage: 3.0
+    AttackSpeed: 1.5
+    KnockbackResistance: 0.2
+    
+  # Visual effects
+  Effects:
+    DashParticles: true
+    SoulParticles: true
+    HealingParticles: true
+    AttackParticles: true
+    FallingBlocks: true
+    AdvancedEffects: true

@@ -1,0 +1,306 @@
+# Boss configurations - Hollow Knight Bosses
+Bosses:
+  # 1. Hornet
+  hornet:
+    Enabled: true
+    Health: 80.0
+    Speed: 0.4
+    Damage: 6.0
+    SpawnChance: 0.1
+    Abilities:
+      - "dash_attack"
+      - "needle_throw"
+      - "silk_trap"
+    
+  # 2. The Knight (Shadow)
+  shadowknight:
+    Enabled: true
+    Health: 60.0
+    Speed: 0.35
+    Damage: 5.0
+    SpawnChance: 0.08
+    Abilities:
+      - "void_slash"
+      - "shadow_dash"
+    
+  # 3. Mantis Lords
+  mantislord:
+    Enabled: true
+    Health: 100.0
+    Speed: 0.45
+    Damage: 8.0
+    SpawnChance: 0.05
+    Abilities:
+      - "boomerang_claw"
+      - "wall_cling"
+      - "lunge_attack"
+    
+  # 4. Soul Master
+  soulmaster:
+    Enabled: true
+    Health: 120.0
+    Speed: 0.3
+    Damage: 7.0
+    SpawnChance: 0.04
+    Abilities:
+      - "soul_orb"
+      - "teleport"
+      - "soul_slam"
+    
+  # 5. Dung Defender
+  dungdefender:
+    Enabled: true
+    Health: 140.0
+    Speed: 0.25
+    Damage: 6.0
+    SpawnChance: 0.03
+    Abilities:
+      - "dung_ball"
+      - "burrow"
+      - "bounce_attack"
+    
+  # 6. Broken Vessel
+  brokenvessel:
+    Enabled: true
+    Health: 90.0
+    Speed: 0.3
+    Damage: 7.0
+    SpawnChance: 0.06
+    Abilities:
+      - "infected_blob"
+      - "leap_attack"
+      - "balloon_summon"
+    
+  # 7. Crystal Guardian
+  crystalguardian:
+    Enabled: true
+    Health: 110.0
+    Speed: 0.2
+    Damage: 8.0
+    SpawnChance: 0.04
+    Abilities:
+      - "crystal_beam"
+      - "spike_attack"
+      - "crystal_stomp"
+    
+  # 8. Watcher Knights
+  watcherknight:
+    Enabled: true
+    Health: 130.0
+    Speed: 0.35
+    Damage: 9.0
+    SpawnChance: 0.03
+    Abilities:
+      - "roll_attack"
+      - "bounce_slam"
+      - "spin_dash"
+    
+  # 9. Traitor Lord
+  traitorlord:
+    Enabled: true
+    Health: 160.0
+    Speed: 0.4
+    Damage: 10.0
+    SpawnChance: 0.02
+    Abilities:
+      - "shockwave_slash"
+      - "dash_strike"
+      - "mantis_summon"
+    
+  # 10. Grimm
+  grimm:
+    Enabled: true
+    Health: 200.0
+    Speed: 0.5
+    Damage: 12.0
+    SpawnChance: 0.01
+    Abilities:
+      - "fire_bat"
+      - "teleport_strike"
+      - "ground_fire"
+      - "uppercut_flame"
+    
+  # 11. The Radiance
+  radiance:
+    Enabled: true
+    Health: 300.0
+    Speed: 0.6
+    Damage: 15.0
+    SpawnChance: 0.005
+    Abilities:
+      - "light_beam"
+      - "orb_barrage"
+      - "platform_destroy"
+      - "sword_rain"
+    
+  # 12. Nightmare King Grimm
+  nightmarekingrimm:
+    Enabled: true
+    Health: 250.0
+    Speed: 0.7
+    Damage: 18.0
+    SpawnChance: 0.003
+    Abilities:
+      - "flame_pillars"
+      - "fire_dash"
+      - "bat_swarm"
+      - "pufferfish_attack"
+    
+  # 13. Absolute Radiance
+  absoluteradiance:
+    Enabled: true
+    Health: 400.0
+    Speed: 0.8
+    Damage: 20.0
+    SpawnChance: 0.001
+    Abilities:
+      - "void_beam"
+      - "light_explosion"
+      - "radiant_orbs"
+      - "final_ascension"
+    
+  # 14. Pure Vessel
+  purevessel:
+    Enabled: true
+    Health: 180.0
+    Speed: 0.6
+    Damage: 14.0
+    SpawnChance: 0.01
+    Abilities:
+      - "void_tendrils"
+      - "focus_blast"
+      - "triple_slash"
+      - "void_daggers"
+    
+  # 15. Sisters of Battle
+  sistersofbattle:
+    Enabled: true
+    Health: 150.0
+    Speed: 0.5
+    Damage: 12.0
+    SpawnChance: 0.02
+    Abilities:
+      - "synchronized_attack"
+      - "wall_jump_combo"
+      - "triple_boomerang"
+
+# Silksong Bosses
+  # 16. Lace
+  lace:
+    Enabled: true
+    Health: 120.0
+    Speed: 0.6
+    Damage: 10.0
+    SpawnChance: 0.03
+    Abilities:
+      - "silk_whip"
+      - "thread_trap"
+      - "aerial_combo"
+    
+  # 17. Moss Mother
+  moss:
+    Enabled: true
+    Health: 180.0
+    Speed: 0.3
+    Damage: 12.0
+    SpawnChance: 0.02
+    Abilities:
+      - "spore_cloud"
+      - "root_spike"
+      - "moss_heal"
+    
+  # 18. Sharpe
+  sharpe:
+    Enabled: true
+    Health: 100.0
+    Speed: 0.4
+    Damage: 8.0
+    SpawnChance: 0.04
+    Abilities:
+      - "bone_throw"
+      - "skeleton_summon"
+      - "bone_prison"
+    
+  # 19. Gannet
+  gannet:
+    Enabled: true
+    Health: 90.0
+    Speed: 0.7
+    Damage: 7.0
+    SpawnChance: 0.05
+    Abilities:
+      - "dive_bomb"
+      - "wind_gust"
+      - "feather_storm"
+    
+  # 20. Carmelita
+  carmelita:
+    Enabled: true
+    Health: 110.0
+    Speed: 0.5
+    Damage: 9.0
+    SpawnChance: 0.03
+    Abilities:
+      - "web_shot"
+      - "poison_bite"
+      - "spider_summon"
+    
+  # 21. Macabre
+  macabre:
+    Enabled: true
+    Health: 160.0
+    Speed: 0.4
+    Damage: 13.0
+    SpawnChance: 0.02
+    Abilities:
+      - "death_dance"
+      - "soul_drain"
+      - "phantom_strike"
+    
+  # 22. Krow
+  krow:
+    Enabled: true
+    Health: 140.0
+    Speed: 0.6
+    Damage: 11.0
+    SpawnChance: 0.025
+    Abilities:
+      - "crow_swarm"
+      - "shadow_flight"
+      - "talon_strike"
+    
+  # 23. Bone Bottom
+  bonebottom:
+    Enabled: true
+    Health: 200.0
+    Speed: 0.3
+    Damage: 15.0
+    SpawnChance: 0.015
+    Abilities:
+      - "bone_slam"
+      - "skeleton_army"
+      - "bone_wall"
+    
+  # 24. Seth
+  seth:
+    Enabled: true
+    Health: 220.0
+    Speed: 0.5
+    Damage: 16.0
+    SpawnChance: 0.01
+    Abilities:
+      - "fire_serpent"
+      - "lava_pool"
+      - "flame_burst"
+    
+  # 25. Coral
+  coral:
+    Enabled: true
+    Health: 190.0
+    Speed: 0.4
+    Damage: 14.0
+    SpawnChance: 0.02
+    Abilities:
+      - "water_blast"
+      - "coral_growth"
+      - "tidal_wave"

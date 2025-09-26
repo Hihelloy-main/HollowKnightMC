@@ -30,35 +30,56 @@ public class KnightCommand implements CommandExecutor, TabCompleter {
         Player player = (Player) sender;
 
         if (args.length == 0) {
-            // Toggle knight abilities
-            if (knightManager.hasKnightAbilities(player)) {
-                knightManager.disableKnightAbilities(player);
-                player.sendMessage(ChatColor.YELLOW + "Knight abilities disabled!");
-            } else {
-                if (!player.hasPermission("hollowknightmc.knight")) {
-                    player.sendMessage(ChatColor.RED + "You don't have permission to use Knight abilities!");
-                    return true;
-                }
-                if (knightManager.enableKnightAbilities(player)) {
-                    player.sendMessage(ChatColor.GREEN + "Knight abilities enabled!");
-                    player.sendMessage(ChatColor.GRAY + "Controls:");
-                    player.sendMessage(ChatColor.GRAY + "- Double-tap SHIFT: Dash");
-                    player.sendMessage(ChatColor.GRAY + "- SHIFT + SPACE (near wall): Wall Jump");
-                    player.sendMessage(ChatColor.GRAY + "- Hold SHIFT + Right-click: Focus (heal)");
-                    player.sendMessage(ChatColor.GRAY + "- Left-click: Vengeful Spirit");
-                } else {
-                    player.sendMessage(ChatColor.RED + "Failed to enable Knight abilities!");
-                }
-            }
+            player.sendMessage(ChatColor.GOLD + "=== Knight Commands ===");
+            player.sendMessage(ChatColor.YELLOW + "/knight give - Get Knight abilities");
+            player.sendMessage(ChatColor.YELLOW + "/knight remove - Remove Knight abilities");
+            player.sendMessage(ChatColor.YELLOW + "/knight abilities - View Knight abilities");
             return true;
         }
 
         String subCommand = args[0].toLowerCase();
 
         switch (subCommand) {
+            case "give":
+                if (knightManager.hasKnightAbilities(player)) {
+                    player.sendMessage(ChatColor.YELLOW + "You already have Knight abilities!");
+                    return true;
+                }
+                
+                if (knightManager.enableKnightAbilities(player)) {
+                    player.sendMessage(ChatColor.BLUE + "⚔ You are now a Knight! ⚔");
+                    player.sendMessage(ChatColor.GRAY + "Use /knight abilities to see your powers");
+                    player.sendMessage(ChatColor.GRAY + "Controls:");
+                    player.sendMessage(ChatColor.GRAY + "- Double-tap SHIFT: Dash");
+                    player.sendMessage(ChatColor.GRAY + "- LEFT CLICK: Vengeful Spirit");
+                    player.sendMessage(ChatColor.GRAY + "- SHIFT + RIGHT CLICK: Focus (heal)");
+                } else {
+                    player.sendMessage(ChatColor.RED + "Failed to give Knight abilities!");
+                }
+                break;
+
+            case "remove":
+                if (!knightManager.hasKnightAbilities(player)) {
+                    player.sendMessage(ChatColor.RED + "You don't have Knight abilities!");
+                    return true;
+                }
+                
+                knightManager.disableKnightAbilities(player);
+                player.sendMessage(ChatColor.YELLOW + "Knight abilities removed!");
+                break;
+
+            case "abilities":
+                if (!knightManager.hasKnightAbilities(player)) {
+                    player.sendMessage(ChatColor.RED + "You don't have Knight abilities! Use /knight give first");
+                    return true;
+                }
+                
+                showKnightAbilities(player);
+                break;
+
             case "soul":
                 if (!knightManager.hasKnightAbilities(player)) {
-                    player.sendMessage(ChatColor.RED + "You don't have Knight abilities enabled!");
+                    player.sendMessage(ChatColor.RED + "You don't have Knight abilities!");
                     return true;
                 }
                 KnightPlayer knightPlayer = knightManager.getKnightPlayer(player);
@@ -67,25 +88,37 @@ public class KnightCommand implements CommandExecutor, TabCompleter {
                 }
                 break;
 
-            case "reload":
-                if (!player.hasPermission("hollowknightmc.admin")) {
-                    player.sendMessage(ChatColor.RED + "You don't have permission to reload the config!");
-                    return true;
-                }
-                knightManager.reloadConfig();
-                player.sendMessage(ChatColor.GREEN + "Knight configuration reloaded!");
-                break;
-
-            case "toggle":
-                // Same as no args
-                return onCommand(sender, command, label, new String[0]);
-
             default:
-                player.sendMessage(ChatColor.RED + "Usage: /knight [toggle|soul|reload]");
+                player.sendMessage(ChatColor.RED + "Usage: /knight [give|remove|abilities|soul]");
                 break;
         }
 
         return true;
+    }
+
+    private void showKnightAbilities(Player player) {
+        player.sendMessage(ChatColor.BLUE + "=== ⚔ KNIGHT ABILITIES ⚔ ===");
+        player.sendMessage("");
+        player.sendMessage(ChatColor.DARK_BLUE + "Soul System:");
+        player.sendMessage(ChatColor.GRAY + "• Gain soul from hitting enemies (3 soul)");
+        player.sendMessage(ChatColor.GRAY + "• Gain extra soul from kills (11 soul)");
+        player.sendMessage(ChatColor.GRAY + "• Soul displayed on XP bar");
+        player.sendMessage("");
+        player.sendMessage(ChatColor.DARK_BLUE + "Movement Abilities:");
+        player.sendMessage(ChatColor.YELLOW + "• Dash" + ChatColor.GRAY + " - Double-tap SHIFT");
+        player.sendMessage(ChatColor.GRAY + "  Dash forward with invulnerability");
+        player.sendMessage(ChatColor.YELLOW + "• Wall Jump" + ChatColor.GRAY + " - SHIFT + SPACE near wall");
+        player.sendMessage(ChatColor.GRAY + "  Jump off walls for extra mobility");
+        player.sendMessage(ChatColor.YELLOW + "• Double Jump" + ChatColor.GRAY + " - SPACE in mid-air");
+        player.sendMessage(ChatColor.GRAY + "  Additional jump while airborne");
+        player.sendMessage("");
+        player.sendMessage(ChatColor.DARK_BLUE + "Combat Abilities:");
+        player.sendMessage(ChatColor.YELLOW + "• Vengeful Spirit" + ChatColor.GRAY + " - LEFT CLICK");
+        player.sendMessage(ChatColor.GRAY + "  Ranged soul projectile (11 soul)");
+        player.sendMessage(ChatColor.YELLOW + "• Focus" + ChatColor.GRAY + " - SHIFT + RIGHT CLICK");
+        player.sendMessage(ChatColor.GRAY + "  Heal yourself (33 soul)");
+        player.sendMessage(ChatColor.YELLOW + "• Crystal Dash" + ChatColor.GRAY + " - Hold SHIFT");
+        player.sendMessage(ChatColor.GRAY + "  Charged long-distance dash");
     }
 
     @Override
@@ -93,7 +126,12 @@ public class KnightCommand implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
         
         if (args.length == 1) {
-            completions.addAll(Arrays.asList("toggle", "soul", "reload"));
+            List<String> subCommands = Arrays.asList("give", "remove", "abilities", "soul");
+            for (String subCmd : subCommands) {
+                if (subCmd.toLowerCase().startsWith(args[0].toLowerCase())) {
+                    completions.add(subCmd);
+                }
+            }
         }
         
         return completions;

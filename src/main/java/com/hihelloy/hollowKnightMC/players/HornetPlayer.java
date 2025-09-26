@@ -131,6 +131,64 @@ public class HornetPlayer {
         return true;
     }
 
+    public boolean castSilkLash() {
+        if (!configManager.getConfig().getBoolean("Hornet.SilkLash.Enabled", true)) return false;
+        if (needleThrowCooldown > 0) return false;
+        
+        int silkCost = configManager.getConfig().getInt("Hornet.SilkLash.SilkCost", 8);
+        if (currentSilk < silkCost) return false;
+        
+        double damage = configManager.getConfig().getDouble("Hornet.SilkLash.Damage", 6.0);
+        double range = configManager.getConfig().getDouble("Hornet.SilkLash.Range", 4.0);
+        double knockback = configManager.getConfig().getDouble("Hornet.SilkLash.KnockbackPower", 1.5);
+        
+        currentSilk -= silkCost;
+        needleThrowCooldown = 25;
+        
+        // Damage nearby entities in front of player
+        Vector direction = player.getLocation().getDirection();
+        for (org.bukkit.entity.Entity entity : player.getNearbyEntities(range, range, range)) {
+            if (entity instanceof org.bukkit.entity.LivingEntity && !(entity instanceof Player)) {
+                Vector toEntity = entity.getLocation().subtract(player.getLocation()).toVector().normalize();
+                if (direction.dot(toEntity) > 0.5) { // In front of player
+                    ((org.bukkit.entity.LivingEntity) entity).damage(damage, player);
+                    entity.setVelocity(toEntity.multiply(knockback));
+                }
+            }
+        }
+        
+        // Effects
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.0f, 1.2f);
+        if (configManager.getConfig().getBoolean("Hornet.Effects.SilkParticles", true)) {
+            player.getWorld().spawnParticle(Particle.WHITE_ASH, player.getLocation().add(direction), 8, 0.5, 0.5, 0.5, 0.1);
+        }
+        
+        return true;
+    }
+
+    public boolean placeSpikeTrap() {
+        if (!configManager.getConfig().getBoolean("Hornet.SpikeTrap.Enabled", true)) return false;
+        if (silkTrapCooldown > 0) return false;
+        
+        int silkCost = configManager.getConfig().getInt("Hornet.SpikeTrap.SilkCost", 20);
+        if (currentSilk < silkCost) return false;
+        
+        currentSilk -= silkCost;
+        silkTrapCooldown = 120; // 6 second cooldown
+        
+        // Place spike trap (using cactus block)
+        org.bukkit.Location trapLoc = player.getLocation().add(player.getLocation().getDirection().multiply(2));
+        trapLoc.getBlock().setType(org.bukkit.Material.CACTUS);
+        
+        // Effects
+        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_PLACE, 1.0f, 1.5f);
+        if (configManager.getConfig().getBoolean("Hornet.Effects.SilkParticles", true)) {
+            player.getWorld().spawnParticle(Particle.CRIT, trapLoc, 15, 1.0, 1.0, 1.0, 0.1);
+        }
+        
+        return true;
+    }
+
     public void addSilk(int amount) {
         currentSilk = Math.min(currentSilk + amount, maxSilk);
         updateSilkDisplay();
